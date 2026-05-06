@@ -1,0 +1,77 @@
+:root {
+    --primary-purple: #7B61FF;
+    --dark-purple: #6D59A4;
+    --btn-purple: #7E57C2;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Fredoka', sans-serif; }
+
+/* NAV BAR ACTIVE pets */
+.main-nav a.active::after {
+    content: ''; position: absolute; bottom: -5px; left: 0; width: 100%; height: 3px; background: var(--dark-purple);
+}
+
+/* HERO STYLING */
+.profile-hero { position: relative; margin-bottom: 120px; }
+.cover-photo { height: 280px; background-color: #9897E2; border-radius: 30px; position: relative; overflow: hidden; background-size: cover; }
+.avatar-box { 
+    width: 160px; height: 160px; border-radius: 50%; border: 8px solid white; 
+    background-color: var(--primary-purple); position: absolute; bottom: -60px; left: 50px;
+    background-size: cover; overflow: hidden;
+}
+
+/* Edit Overlay for Photos */
+.edit-overlay { 
+    position: absolute; width: 100%; height: 100%; background: rgba(0,0,0,0.3); 
+    display: none; align-items: center; justify-content: center; color: white; font-size: 2rem; cursor: pointer;
+}
+.edit-mode .edit-overlay { display: flex; }
+
+.hero-details { display: flex; align-items: flex-end; position: absolute; bottom: -80px; width: 100%; }
+.name-block { margin-left: 230px; }
+.name-block h2 { font-size: 3rem; color: var(--dark-purple); }
+.name-input { font-size: 2.5rem; font-weight: 700; border: none; background: #f0f0f0; border-radius: 10px; padding: 0 10px; color: var(--dark-purple); }
+
+.hero-actions { display: flex; gap: 15px; margin-top: 10px; }
+.action-pill { 
+    background: #F2EEEE; padding: 8px 25px; border-radius: 20px; font-weight: 600; 
+    color: #666; display: flex; align-items: center; gap: 10px; border: none; cursor: pointer; transition: 0.3s;
+}
+.action-pill:hover { transform: scale(1.05); background: #e8e4e4; }
+
+/* TAB SYSTEM */
+.tab-controls { display: flex; justify-content: center; gap: 20px; margin: 40px 0; }
+.tab-btn { 
+    padding: 12px 60px; border-radius: 15px; border: none; font-weight: 700; font-size: 1rem;
+    cursor: pointer; background: #CCACE6; color: white; transition: 0.3s;
+}
+.tab-btn.active { background: var(--dark-purple); }
+
+/* INFO CARDS */
+.info-segment { display: none; }
+.info-segment.active { display: block; }
+.info-card { background: #F8F4F4; border-radius: 30px; padding: 20px 40px; margin-bottom: 30px; }
+
+.info-row { display: flex; justify-content: space-between; padding: 18px 0; border-bottom: 1px solid #ddd; }
+.info-row label { color: #A0A0A0; font-weight: 600; }
+.info-row span, .info-row strong { font-weight: 700; font-size: 1.1rem; }
+
+/* EDIT MODE TOGGLE LOGIC */
+.edit-only { display: none !important; }
+.edit-mode .edit-only { display: block !important; }
+.edit-mode .view-only { display: none !important; }
+
+/* Inputs in Edit Mode */
+input[type="text"], textarea, select { 
+    background: white; border: 1px solid #ddd; padding: 5px 10px; border-radius: 8px; font-family: inherit; font-weight: 600; text-align: right;
+}
+textarea { text-align: left; width: 100%; min-height: 80px; margin-top: 10px; }
+
+/* FOOTER BUTTONS */
+.edit-footer-btns { display: flex; justify-content: center; gap: 20px; margin: 40px 0; }
+.edit-footer-btns button { padding: 12px 80px; border-radius: 15px; border: none; font-weight: 700; cursor: pointer; font-size: 1.1rem; color: white; transition: 0.3s; }
+.btn-cancel { background: #CCACE6; }
+.btn-save { background: var(--dark-purple); }
+
+/* HOVER BOUNCE */
+.tab-btn:hover, .btn-save:hover, .btn-cancel:hover { transform: scale(1.05) translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
