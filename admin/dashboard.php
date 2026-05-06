@@ -41,7 +41,7 @@ if ($total_pets > 0) {
                 </div>
                 <nav class="main-nav">
                     <a href="#" class="active">home</a>
-                    <a href="#">pets</a>
+                    <a href="pets_directory/pets.php">pets</a>
                     <a href="#">users</a>
                     <a href="#" class="logout-btn">logout</a>
                 </nav>
