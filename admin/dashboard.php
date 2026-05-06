@@ -13,7 +13,9 @@
     <div class="dashboard-wrapper">
         <header>
             <div class="nav-container">
-                <div class="logo">🐾 CampusTails</div>
+                <div class="logo">
+                    <img src="../resources/Logo.png" alt="CampusTails" style="height: 45px; width: auto; object-fit: contain;">
+                </div>
                 <nav class="main-nav">
                     <a href="#" class="active">home</a>
                     <a href="#">pets</a>
@@ -28,7 +30,7 @@
             <div class="stats-grid">
                 <div class="stat-card bg-pink"><span class="stat-number">50</span><span class="stat-label">Registered Pets</span></div>
                 <div class="stat-card bg-lavender"><span class="stat-number">25</span><span class="stat-label">Fully Vaccinated</span></div>
-                <div class="stat-card bg-blue"><span class="stat-number">5</span><span class="stat-label">Pets Under Observation</span></div>
+                <div class="stat-card bg-blue"><span class="stat-number">5</span><span class="stat-label">Pets Adopted</span></div>
                 <div class="stat-card bg-purple"><span class="stat-number">3</span><span class="stat-label">Recently Added</span></div>
             </div>
         </main>
@@ -46,7 +48,7 @@
                 </div>
                 <div class="tool-card">
                     <div class="paw-circle"><i class="fas fa-utensils"></i></div>
-                    <p>Pet Foods Directory</p>
+                    <p>Donations Directory</p>
                 </div>
                 <div class="tool-card">
                     <div class="paw-circle"><i class="fas fa-heart"></i></div>
@@ -131,6 +133,6 @@
         </div>
     </div>
 
-    <script src="script.js"></script>
+     <script src="script.js"></script>
 </body>
 </html>
