@@ -1,3 +1,26 @@
+<?php
+include('../utils/db_config.php');
+
+// Fetch all pets to calculate stats
+$pets = supabase_query("pets");
+$total_pets = is_array($pets) ? count($pets) : 0;
+$vaccinated_count = 0;
+$adopted_count = 0;
+$recent_count = 0;
+$one_day_ago = strtotime("-1 day");
+if ($total_pets > 0) {
+    foreach ($pets as $pet) {
+        if (isset($pet['is_vaccinated']) && $pet['is_vaccinated'] == true) $vaccinated_count++;
+        if (isset($pet['is_adopted']) && $pet['is_adopted'] == true) $adopted_count++;
+          // Recently Added Logic
+        if (strtotime($pet['created_at']) > $one_day_ago) {
+            $recent_count++;
+        }
+    }
+}
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -28,10 +51,10 @@
         <main class="container">
             <h1 class="section-heading">PawCenterbase</h1>
             <div class="stats-grid">
-                <div class="stat-card bg-pink"><span class="stat-number">50</span><span class="stat-label">Registered Pets</span></div>
-                <div class="stat-card bg-lavender"><span class="stat-number">25</span><span class="stat-label">Fully Vaccinated</span></div>
-                <div class="stat-card bg-blue"><span class="stat-number">5</span><span class="stat-label">Pets Adopted</span></div>
-                <div class="stat-card bg-purple"><span class="stat-number">3</span><span class="stat-label">Recently Added</span></div>
+                <div class="stat-card bg-pink"><span class="stat-number"><?php echo $total_pets; ?></span><span class="stat-label">Registered Pets</span></div>
+                <div class="stat-card bg-lavender"><span class="stat-number"><?php echo $vaccinated_count; ?></span><span class="stat-label">Fully Vaccinated</span></div>
+                <div class="stat-card bg-blue"><span class="stat-number"><?php echo $adopted_count; ?></span><span class="stat-label">Pets Adopted</span></div>
+                <div class="stat-card bg-purple"> <span class="stat-number"><?php echo $recent_count; ?></span> <span class="stat-label">Recently Added</span></div>
             </div>
         </main>
 
@@ -65,12 +88,12 @@
             <div class="modal-content-scrollable">
                 <h2 class="section-heading" style="margin: 30px 0 20px;">New Paw Profile</h2>
                 
-                <form id="petForm">
+                <form id="petForm" enctype="multipart/form-data">
                     <div id="step1">
                         <div class="img-header">
                             <div class="cover-box" id="cover-prev">
                                 <input type="file" id="cover-in" hidden accept="image/*">
-                                <label for="cover-in" class="upload-trigger"><i class="fas fa-image"></i><br><span>Edit Cover</span></label>
+                                <label for="cover-in" class="upload-trigger"><i class="fas fa-image"></i></label>
                             </div>
                             <div class="profile-circle" id="profile-prev">
                                 <input type="file" id="profile-in" hidden accept="image/*">
@@ -80,20 +103,31 @@
 
                         <div class="blue-banner">Pet Profile</div>
 
-                        <div class="form-box">
-                            <div class="form-row"><label>Name</label><input type="text" placeholder="Pet Name"></div>
-                            <div class="form-row"><label>Specie</label><select><option>Cat</option><option>Dog</option></select></div>
-                            <div class="form-row vertical-stack"><label>Likes</label><input type="text" placeholder="Treats, long walks, belly rubs..."></div>
-                            <div class="form-row"><label>Date Found</label><input type="date"></div>
-                            <div class="form-row vertical-stack"><label>Allergies</label><input type="text" placeholder="List any allergies here..."></div>
-                            <div class="form-row">
-                                <label>Location Found</label>
-                                <div class="loc-wrapper">
-                                    <select id="locSel"><option>Main Campus</option></select>
-                                    <button type="button" class="add-loc-btn" onclick="addLocation()"><i class="fas fa-plus-circle"></i></button>
-                                </div>
+                      <div class="form-box">
+                        <!-- Updated with name="name" -->
+                        <div class="form-row"><label>Name</label><input type="text" name="name" placeholder="Pet Name"></div>
+                        
+                        <!-- Updated with name="species" -->
+                        <div class="form-row"><label>Species</label><select name="species"><option>Cat</option><option>Dog</option></select></div>
+                        
+                        <!-- Updated with name="likes" -->
+                        <div class="form-row vertical-stack"><label>Likes</label><input type="text" name="likes" placeholder="Treats, long walks, belly rubs..."></div>
+                        
+                        <!-- Updated with name="date_found" -->
+                        <div class="form-row"><label>Date Found</label><input type="date" name="date_found"></div>
+                        
+                        <!-- Updated with name="allergies" -->
+                        <div class="form-row vertical-stack"><label>Allergies</label><input type="text" name="allergies" placeholder="List any allergies here..."></div>
+                        
+                        <div class="form-row">
+                            <label>Location Found</label>
+                            <div class="loc-wrapper">
+                                <!-- Updated with name="location" -->
+                                <select id="locSel" name="location"><option>Main Campus</option></select>
+                                <button type="button" class="add-loc-btn" onclick="addLocation()"><i class="fas fa-plus-circle"></i></button>
                             </div>
                         </div>
+                    </div>
 
                         <div class="modal-btns">
                             <button type="button" class="btn btn-cancel" onclick="closeModal()">Cancel</button>

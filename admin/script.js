@@ -147,3 +147,100 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
+
+// --- SAVING LOGIC ---//
+
+document.getElementById('petForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    // 1. Initialize FormData (handles basic info like Name, Species automatically)
+    const formData = new FormData(this);
+
+    // 2. Manually gather Health Records from dynamic rows
+   const vaccines = [];
+    const vaccineRows = document.querySelectorAll('#vaccine-wrap .dynamic-item');
+    
+    vaccineRows.forEach((item, index) => {
+        const inputs = item.querySelectorAll('input');
+        
+        // Push text data to the array
+        vaccines.push({
+            vaccine_name: inputs[0].value,
+            date_administered: inputs[1].value,
+            next_due_date: inputs[2].value,
+            veterinarian: inputs[3].value
+        });
+
+        // Capture the PDF file if selected (index 4 is the Upload File input)
+        const pdfFile = inputs[4].files[0];
+        if (pdfFile) {
+            formData.append(`vaccine_doc_${index}`, pdfFile);
+        }
+    });
+
+    const medications = [];
+    document.querySelectorAll('#med-wrap .dynamic-item').forEach(item => {
+        const inputs = item.querySelectorAll('input');
+        medications.push({
+            medicine_name: inputs[0].value,
+            dosage: inputs[1].value,
+            date_started: inputs[2].value,
+            purpose: inputs[3].value
+        });
+    });
+
+        const medical_history = [];
+        // Find every history item added
+        const historyItems = document.querySelectorAll('#hist-wrap .dynamic-item');
+
+        historyItems.forEach(item => {
+            // Get specific elements within THIS item
+            const nameInp = item.querySelector('input[placeholder="Name"]');
+            const dateInp = item.querySelector('input[type="date"]');
+            const categorySel = item.querySelectorAll('select')[0]; // The Category dropdown
+            const ongoingSel = item.querySelectorAll('select')[1];  // The Ongoing dropdown
+
+            // Only add if there is a name typed in
+            if (nameInp && nameInp.value.trim() !== "") {
+                medical_history.push({
+                    illness_name: nameInp.value,
+                    category: categorySel.value,
+                    date_diagnosed: dateInp.value,
+                    // Convert "Yes" to true, "No" to false for Supabase
+                    is_ongoing: (ongoingSel.value === "Yes")
+                });
+            }
+        });
+
+    console.log("History Data Scraped:", medical_history);
+
+    
+    formData.append('vaccines', JSON.stringify(vaccines));
+    formData.append('medications', JSON.stringify(medications));
+    formData.append('history', JSON.stringify(medical_history));
+
+    // 3. Attach Image Files explicitly from your custom upload triggers
+    const profileFile = document.getElementById('profile-in').files[0];
+    const coverFile = document.getElementById('cover-in').files[0];
+    if (profileFile) formData.append('profile_img_file', profileFile);
+    if (coverFile) formData.append('cover_img_file', coverFile);
+
+    try {
+        const response = await fetch('save_pet.php', {
+            method: 'POST',
+            body: formData // DO NOT add Content-Type header here
+        });
+
+        const result = await response.json();
+        if (result.success) {
+            alert("PawFriend Saved Successfully!");
+            window.location.reload();
+        } else {
+            alert("Error: " + result.message);
+            console.log("Debug Info:", result.debug);
+        }
+    } catch (err) {
+        console.error("Fetch Error:", err);
+        alert("Server communication error.");
+    }
+});
