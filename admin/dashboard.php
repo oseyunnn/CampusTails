@@ -1,19 +1,36 @@
 <?php
 include('../utils/db_config.php');
 
-// Fetch all pets to calculate stats
+// 1. Fetch all pets to calculate general stats
 $pets = supabase_query("pets");
 $total_pets = is_array($pets) ? count($pets) : 0;
+
+// 2. Fetch vaccine records to count unique vaccinated animals
+// We select only 'pet_id' to keep the query light
+$vaccine_data = supabase_query("vaccine_records?select=pet_id");
 $vaccinated_count = 0;
+
+if (is_array($vaccine_data) && !empty($vaccine_data)) {
+    // Extract all pet_ids into a simple array
+    $all_vaccinated_ids = array_column($vaccine_data, 'pet_id');
+    // array_unique removes duplicates (so 1 pet with 5 vaccines counts as 1)
+    $unique_vaccinated_ids = array_unique($all_vaccinated_ids);
+    $vaccinated_count = count($unique_vaccinated_ids);
+}
+
 $adopted_count = 0;
 $recent_count = 0;
 $one_day_ago = strtotime("-1 day");
+
 if ($total_pets > 0) {
     foreach ($pets as $pet) {
-        if (isset($pet['is_vaccinated']) && $pet['is_vaccinated'] == true) $vaccinated_count++;
-        if (isset($pet['is_adopted']) && $pet['is_adopted'] == true) $adopted_count++;
-          // Recently Added Logic
-        if (strtotime($pet['created_at']) > $one_day_ago) {
+        // Count Adopted
+        if (isset($pet['is_adopted']) && $pet['is_adopted'] == true) {
+            $adopted_count++;
+        }
+        
+        // Recently Added Logic (Last 24 hours)
+        if (isset($pet['created_at']) && strtotime($pet['created_at']) > $one_day_ago) {
             $recent_count++;
         }
     }
@@ -27,7 +44,7 @@ if ($total_pets > 0) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CampusTails | Admin Dashboard</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css?v=1.1">
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
@@ -97,7 +114,7 @@ if ($total_pets > 0) {
                             </div>
                             <div class="profile-circle" id="profile-prev">
                                 <input type="file" id="profile-in" hidden accept="image/*">
-                                <label for="profile-in" class="upload-trigger"><i class="fas fa-image"></i><br><span>Edit Photo</span></label>
+                                <label for="profile-in" class="upload-trigger"><i class="fas fa-image"></i></label>
                             </div>
                         </div>
 
