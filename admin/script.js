@@ -95,39 +95,6 @@ function setupPreview(inputId, previewId) {
 setupPreview('cover-in', 'cover-prev');
 setupPreview('profile-in', 'profile-prev');
 
-document.addEventListener('DOMContentLoaded', function() {
-    
-    // --- LOGIN PAGE PASSWORD TOGGLE ---
-    const eyeBtn = document.getElementById('login_eye_toggle_btn');
-    const passField = document.getElementById('login_secret_input');
-
-    if (eyeBtn && passField) {
-        eyeBtn.addEventListener('click', function() {
-            // Force the switch between "password" (bullets) and "text" (readable)
-            if (passField.type === "password") {
-                passField.type = "text";
-                this.classList.remove('fa-eye-slash');
-                this.classList.add('fa-eye');
-            } else {
-                passField.type = "password";
-                this.classList.remove('fa-eye');
-                this.classList.add('fa-eye-slash');
-            }
-
-            // Visual 'pop' feedback on the icon
-            this.style.transition = '0.15s ease';
-            this.style.transform = 'translateY(-50%) scale(1.3)';
-            setTimeout(() => { this.style.transform = 'translateY(-50%) scale(1)'; }, 150);
-        });
-    }
-
-    // --- BUTTON INTERACTIVE FEEDBACK ---
-    const loginActionBtn = document.querySelector('.auth-login-button');
-    if (loginActionBtn) {
-        loginActionBtn.addEventListener('mousedown', () => loginActionBtn.style.transform = "scale(0.96)");
-        loginActionBtn.addEventListener('mouseup', () => loginActionBtn.style.transform = "translateY(-2px) scale(1.02)");
-    }
-});
 // --- LOGOUT FUNCTIONALITY ---
 document.addEventListener('DOMContentLoaded', function() {
     const logoutBtn = document.querySelector('.logout-btn');
