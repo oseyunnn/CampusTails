@@ -125,7 +125,7 @@ if(is_array($loc_data)) {
                                     and can be usually found at 
                                     <strong><?php echo $pet['location']; ?></strong>.
                                 </p>
-                                <a href="pet_profile.php?id=<?php echo $pet['id']; ?>" class="see-more-btn">See More</a>
+                                <a href="../pet_profile/profile.php?id=<?php echo $pet['id']; ?>" class="see-more-btn">See More</a>
                             </div>
                         </div>
                     </div>
