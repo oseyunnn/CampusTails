@@ -40,6 +40,8 @@ header {
     z-index: 1000;
 }
 
+
+
 .nav-container { 
     border: 2px solid #EEE; 
     border-radius: 100px; 
@@ -110,6 +112,8 @@ header {
     margin: 35px 0; 
     font-weight: 700; 
 }
+
+
 
 .stats-grid { 
     display: grid; 
@@ -335,21 +339,10 @@ footer {
 
 /* --- DYNAMIC ITEMS --- */
 .add-pill { 
-    background: var(--btn-purple); 
-    color: #fff !important; 
-    border: none; 
-    padding: 6px 20px; 
-    border-radius: 20px; 
-    font-size: 0.9rem; 
-    cursor: pointer; 
-    font-weight: 600; 
-    transition: 0.2s;
+    background: var(--btn-purple); color: #fff !important; border: none; padding: 6px 20px; 
+    border-radius: 20px; font-size: 0.9rem; cursor: pointer; transition: 0.2s; margin-left: auto;
 }
-
-.add-pill:hover { 
-    background: var(--primary-purple); 
-    transform: scale(1.05);
-}
+.add-pill:hover { background: var(--primary-purple); transform: scale(1.05); }
 
 .delete-icon { 
     color: #FF5252; 
@@ -416,6 +409,7 @@ footer {
     transform: scale(1.1); 
 }
 
+
 /* Align Upload File Button (PDF) to the right */
 .form-row .add-pill { 
     margin-left: auto; /* Forces the pill to the right side of the row */
@@ -425,3 +419,4 @@ footer {
 .form-row input, .form-row select {
     text-align: right;
 }
+.section-header { display: flex; justify-content: space-between; align-items: center; margin: 20px 0 10px; font-weight: 700; color: #888; }
