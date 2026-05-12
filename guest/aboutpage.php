@@ -1,4 +1,19 @@
-<!-- Hero Section -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About - CampusTails</title>
+
+    <!-- This is the line that connects your CSS -->
+    <link rel="stylesheet" href="aboutpage.css">
+
+    <!-- Don't forget your Google Fonts! -->
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+   <!-- Hero Section -->
 <section class="about-hero">
     <div class="hero-image-container">
         <!-- Background image of people with dog -->
@@ -70,3 +85,6 @@
         </div>
     </div>
 </section>
+
+</body>
+</html>

@@ -1,190 +1,187 @@
+<?php
+require_once '../db_connection.php';
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // ... (Your variable collection stays the same) ...
+
+    try {
+        // SQL INSERT using PDO placeholders
+        $sql = "INSERT INTO users (first_name, last_name, mi, id_number, email, birthday, role, program, year_level, office, contact, username, password, affiliations, user_type) 
+                VALUES (:fname, :lname, :mi, :id_num, :email, :bday, :role, :prog, :year, :off, :cont, :user, :pass, :aff, :utype)";
+        
+        $stmt = $conn->prepare($sql);
+        
+        // Execute with an array (much cleaner than mysqli bind_param)
+        $stmt->execute([
+            ':fname' => $fname,
+            ':lname' => $lname,
+            ':mi'    => $mi,
+            ':id_num'=> $id_num,
+            ':email' => $email,
+            ':bday'  => $birthday,
+            ':role'  => $role,
+            ':prog'  => $program,
+            ':year'  => $year_level,
+            ':off'   => $office,
+            ':cont'  => $contact,
+            ':user'  => $username,
+            ':pass'  => $password,
+            ':aff'   => $affiliations,
+            ':utype' => $user_type
+        ]);
+
+        header("Location: ../login/login.php?signup=success");
+        exit();
+
+    } catch (PDOException $e) {
+        $error = "Registration failed: " . $e->getMessage();
+    }
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register - CampusTails</title>
+    <title>CampusTails | Register</title>
     <link rel="stylesheet" href="register.css">
-    <!-- Font Awesome for Social Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-
-    <!-- Header Navigation -->
-    <header>
-        <div class="nav-container">
-            <div class="logo">
-                <img src="../resources/Logo.png" alt="CampusTails" height="45">
+    <div class="reg-master">
+        <!-- NAVBAR -->
+        <header class="reg-header">
+            <div class="nav-container">
+                <div class="logo-side"><img src="../resources/Logo.png" alt="CampusTails"></div>
+                <nav class="nav-links">
+                    <a href="#">home</a><a href="#">about</a><a href="#">pets</a><a href="../login/login.php">login</a>
+                </nav>
             </div>
-            <nav class="main-nav">
-                <a href="#">home</a>
-                <a href="#">about</a>
-                <a href="#">pets</a>
-                <a href="#" class="active">login</a>
-            </nav>
-        </div>
-    </header>
+        </header>
 
-    <!-- Main Registration Section -->
-    <main class="registration-container">
-        <div class="registration-header">
-            <img src="../resources/Logo.png" alt="CampusTails" class="form-logo">
-            <h2>Welcome PawCrew!</h2>
-            <p>Please fill out all necessary information below.</p>
-        </div>
-
-        <!-- Form started -->
-        <form action="register_process.php" method="POST" class="register-form">
-            
-            <!-- Row 1: Names -->
-            <div class="form-group span-5">
-                <label for="firstName">First Name <span class="required">*</span></label>
-                <input type="text" id="firstName" name="first_name" required>
-            </div>
-            <div class="form-group span-5">
-                <label for="lastName">Last Name <span class="required">*</span></label>
-                <input type="text" id="lastName" name="last_name" required>
-            </div>
-            <div class="form-group span-2">
-                <label for="mi">M.I. <span class="required">*</span></label>
-                <input type="text" id="mi" name="mi" maxlength="2" required>
+        <!-- FORM CONTENT -->
+        <main class="reg-container">
+            <div class="reg-title">
+                <img src="../resources/Logo.png" alt="Logo" class="mini-logo">
+                <h3>Welcome PawCrew!</h3>
+                <p>Please fill out all necessary information below.</p>
             </div>
 
-            <!-- Row 2: ID & Email -->
-            <div class="form-group span-6">
-                <label for="idNumber">ID Number <span class="required">*</span></label>
-                <input type="text" id="idNumber" name="id_number" required>
-            </div>
-            <div class="form-group span-6">
-                <label for="email">Institutional Email <span class="required">*</span></label>
-                <input type="email" id="email" name="email" required>
-            </div>
+            <form action="" method="POST" class="reg-form">
+                <div class="form-grid">
+                    <div class="input-group">
+                        <label>First Name <span class="req">*</span></label>
+                        <input type="text" name="first_name" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Last Name <span class="req">*</span></label>
+                        <input type="text" name="last_name" required>
+                    </div>
+                    <div class="input-group">
+                        <label>M.I. <span class="req">*</span></label>
+                        <input type="text" name="mi" maxlength="2" required>
+                    </div>
 
-            <!-- Row 3: Birthday, Role & Code -->
-            <div class="form-group span-4">
-                <label for="birthday">Birthday <span class="required">*</span></label>
-                <input type="date" id="birthday" name="birthday" required>
-            </div>
-            <div class="form-group span-4">
-                <label for="role">Role <span class="required">*</span></label>
-                <select id="role" name="role" required>
-                    <option value="" disabled selected hidden>Student/Faculty</option>
-                    <option value="student">Student</option>
-                    <option value="faculty">Faculty</option>
-                </select>
-            </div>
-            <div class="form-group span-4">
-                <label for="crewCode">PawCrewCode</label>
-                <input type="text" id="crewCode" name="crew_code" placeholder="Enter code if Admin">
-            </div>
+                    <div class="input-group span-2">
+                        <label>ID Number <span class="req">*</span></label>
+                        <input type="text" name="id_number" required>
+                    </div>
+                    <div class="input-group span-2">
+                        <label>Institutional Email <span class="req">*</span></label>
+                        <input type="email" name="email" required>
+                    </div>
 
-            <!-- Row 4: Student Conditional Fields -->
-            <div class="form-group span-6 student-field hidden">
-                <label for="program">Program <span class="required">*</span> <span class="helper-text">"appears only for student"</span></label>
-                <input type="text" id="program" name="program">
-            </div>
-            <div class="form-group span-6 student-field hidden">
-                <label for="yearLevel">Year Level <span class="required">*</span> <span class="helper-text">"appears only for student"</span></label>
-                <input type="text" id="yearLevel" name="year_level">
-            </div>
+                    <div class="input-group">
+                        <label>Birthday <span class="req">*</span></label>
+                        <input type="date" name="birthday" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Role <span class="req">*</span></label>
+                        <select name="role" id="roleSelect" required>
+                            <option value="" disabled selected>Student/Faculty</option>
+                            <option value="student">Student</option>
+                            <option value="faculty">Faculty</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label>PawCrewCode</label>
+                        <input type="password" name="crew_code">
+                    </div>
 
-            <!-- Row 5: Faculty Conditional Field -->
-            <div class="form-group span-12 faculty-field hidden">
-                <label for="office">Office <span class="required">*</span> <span class="helper-text">"appears only for faculty"</span></label>
-                <input type="text" id="office" name="office">
-            </div>
+                    <!-- Hidden fields toggled by JS -->
+                    <div class="input-group" id="programBox">
+                        <label>Program <span class="req">*</span> <small>"appear only for student"</small></label>
+                        <input type="text" name="program">
+                    </div>
+                    <div class="input-group" id="yearBox">
+                        <label>Year Level <span class="req">*</span> <small>"appear only for student"</small></label>
+                        <input type="text" name="year_level">
+                    </div>
+                    <div class="input-group span-full" id="officeBox">
+                        <label>Office <span class="req">*</span> <small>"appear only for faculty"</small></label>
+                        <input type="text" name="office">
+                    </div>
 
-            <!-- Row 6: Contact & Username -->
-            <div class="form-group span-6">
-                <label for="contact">Contact Number <span class="required">*</span></label>
-                <input type="tel" id="contact" name="contact" required>
-            </div>
-            <div class="form-group span-6">
-                <label for="username">Username <span class="required">*</span></label>
-                <input type="text" id="username" name="username" required>
-            </div>
+                    <div class="input-group">
+                        <label>Contact Number <span class="req">*</span></label>
+                        <input type="text" name="contact" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Username <span class="req">*</span></label>
+                        <input type="text" name="username" required>
+                    </div>
 
-            <!-- Row 7: Passwords -->
-            <div class="form-group span-6">
-                <label for="password">Password <span class="required">*</span></label>
-                <input type="password" id="password" name="password" required>
-            </div>
-            <div class="form-group span-6">
-                <label for="confirmPassword">Confirm Password <span class="required">*</span></label>
-                <input type="password" id="confirmPassword" name="confirm_password" required>
-            </div>
+                    <div class="input-group">
+                        <label>Password <span class="req">*</span></label>
+                        <input type="password" name="password" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Confirm Password <span class="req">*</span></label>
+                        <input type="password" name="confirm_password" required>
+                    </div>
 
-            <!-- Row 8: Affiliations -->
-            <div class="form-group span-12">
-                <label for="affiliations">Affiliations</label>
-                <textarea id="affiliations" name="affiliations" rows="3"></textarea>
-            </div>
+                    <div class="input-group span-full">
+                        <label>Affiliations</label>
+                        <textarea name="affiliations" rows="4"></textarea>
+                    </div>
+                </div>
 
-            <!-- Checkbox Terms -->
-            <div class="terms-container span-12">
-                <input type="checkbox" id="terms" name="terms" required>
-                <label for="terms">By signing up, I agree to the <a href="#">Terms and Conditions</a>.</label>
-            </div>
+                <div class="form-footer">
+                    <label class="check-container">
+                        <input type="checkbox" required> By signing up, I agree to the <a href="#">Terms and Conditions</a>.
+                    </label>
+                    <button type="submit" class="signup-btn">SIGNUP</button>
+                </div>
+            </form>
+        </main>
 
-            <!-- Submit Button -->
-            <div class="submit-container span-12">
-                <button type="submit" class="signup-submit-btn">SIGNUP</button>
-            </div>
-
-        </form>
-    </main>
-
-    <!-- Footer Area -->
-    <footer class="footer-cta">
-        <div class="footer-content">
-            <div class="footer-image-wrapper">
-                <img src="../resources/man-dog.png" alt="Crew Member" class="footer-character">
-            </div>
-            <div class="footer-text-block">
+        <!-- FOOTER VISUAL -->
+        <div class="footer-visual">
+            <div class="cta-content">
                 <h2>Want to be a<br>Campus Crew?</h2>
-                <p class="email-text">Email us at <strong>campustails@gmail.com</strong></p>
-                <div class="social-links">
-                    <a href="#"><i class="fa-brands fa-facebook"></i></a>
-                    <a href="#"><i class="fa-brands fa-instagram"></i></a>
-                    <a href="#"><i class="fa-brands fa-tiktok"></i></a>
+                <p>Email us at campustails@gmail.com</p>
+                <div class="socials">
+                    <i class="fab fa-facebook"></i><i class="fab fa-instagram"></i><i class="fab fa-tiktok"></i>
                 </div>
             </div>
+            <img src="../resources/footer.png" alt="Footer Character" class="footer-img">
         </div>
-    </footer>
+    </div>
 
-    <!-- JavaScript to toggle Student/Faculty fields dynamically -->
     <script>
-        const roleSelect = document.getElementById('role');
-        const studentFields = document.querySelectorAll('.student-field');
-        const facultyFields = document.querySelectorAll('.faculty-field');
+        // Role toggle logic
+        const roleSelect = document.getElementById('roleSelect');
+        const pBox = document.getElementById('programBox');
+        const yBox = document.getElementById('yearBox');
+        const oBox = document.getElementById('officeBox');
 
-        const programInput = document.getElementById('program');
-        const yearLevelInput = document.getElementById('yearLevel');
-        const officeInput = document.getElementById('office');
-
-        roleSelect.addEventListener('change', function() {
-            if (this.value === 'student') {
-                // Show Student, Hide Faculty
-                studentFields.forEach(f => f.classList.remove('hidden'));
-                facultyFields.forEach(f => f.classList.add('hidden'));
-                
-                // Toggle required tags
-                programInput.required = true;
-                yearLevelInput.required = true;
-                officeInput.required = false;
-                officeInput.value = ""; // Clear input
-            } else if (this.value === 'faculty') {
-                // Show Faculty, Hide Student
-                studentFields.forEach(f => f.classList.add('hidden'));
-                facultyFields.forEach(f => f.classList.remove('hidden'));
-                
-                // Toggle required tags
-                programInput.required = false;
-                yearLevelInput.required = false;
-                officeInput.required = true;
-                programInput.value = ""; // Clear inputs
-                yearLevelInput.value = "";
+        roleSelect.addEventListener('change', () => {
+            if(roleSelect.value === 'student') {
+                pBox.style.display = 'block'; yBox.style.display = 'block'; oBox.style.display = 'none';
+            } else {
+                pBox.style.display = 'none'; yBox.style.display = 'none'; oBox.style.display = 'block';
             }
         });
     </script>
