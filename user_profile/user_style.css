@@ -1,0 +1,89 @@
+:root {
+    --primary-purple: #7B61FF;
+    --lavender: #9897E2;
+    --dark-purple: #6D59A4;
+    --light-pink: #F5C7F7;
+    --bg-gray: #F8F4F4;
+}
+
+body { font-family: 'Fredoka', sans-serif; background: #fff; margin: 0; color: var(--dark-purple); }
+
+/* Navigation */
+header { padding: 20px 5%; }
+.nav-container { 
+    border: 2.5px solid #F0F0F0; border-radius: 50px; 
+    display: flex; justify-content: space-between; align-items: center; padding: 10px 40px; 
+}
+.logo img { height: 40px; }
+.main-nav a { text-decoration: none; color: var(--primary-purple); margin-left: 20px; font-weight: 600; }
+.main-nav a.active { border-bottom: 3px solid var(--primary-purple); padding-bottom: 5px; }
+
+.container { max-width: 900px; margin: 0 auto; padding-bottom: 100px; }
+.page-title { text-align: center; font-size: 3rem; margin: 40px 0; }
+
+/* Hero Section */
+.hero-block { position: relative; margin-bottom: 40px; }
+.cover-photo { 
+    height: 300px; background: var(--lavender); border-radius: 20px; 
+    display: flex; align-items: center; justify-content: center;
+}
+.cover-placeholder-icon { font-size: 5rem; color: #fff; opacity: 0.8; }
+
+.hero-id-area { display: flex; align-items: flex-end; padding: 0 40px; margin-top: -80px; gap: 30px; }
+.avatar-border { 
+    width: 200px; height: 200px; background: #fff; border-radius: 50%; 
+    padding: 10px; box-shadow: 0 10px 20px rgba(0,0,0,0.05); 
+}
+.avatar-img { 
+    width: 100%; height: 100%; background: var(--dark-purple); border-radius: 50%; 
+    display: flex; align-items: center; justify-content: center; color: white; font-size: 4rem;
+}
+
+.name-header h2 { font-size: 5rem; margin: 0; line-height: 1; letter-spacing: -2px; }
+
+/* Pills */
+.hero-pills { display: flex; gap: 15px; margin-top: 15px; }
+.pill { 
+    background: #F3F0F0; border: none; padding: 8px 35px; border-radius: 30px; 
+    font-weight: 600; color: #555; display: flex; align-items: center; gap: 10px; font-size: 1rem;
+}
+.pill i.fa-heart { color: #F1A7B4; }
+
+/* Tabs */
+.tab-switcher { display: flex; gap: 20px; margin: 40px 0 20px; }
+.tab-btn { 
+    flex: 1; padding: 18px; border: none; border-radius: 12px; font-weight: 700; 
+    font-size: 1.2rem; cursor: pointer; transition: 0.3s;
+}
+.tab-btn.active { background: var(--dark-purple); color: #fff; }
+.tab-btn:not(.active) { background: #CCACE6; color: #fff; }
+
+/* Profile Card */
+.profile-card { background: var(--bg-gray); border-radius: 25px; padding: 40px 60px; }
+.data-row { 
+    display: flex; justify-content: space-between; align-items: center; 
+    padding: 20px 0; border-bottom: 1px solid #E0E0E0; 
+}
+.data-row.no-border { border: none; padding-bottom: 5px; }
+.data-row label { color: #A0A0A0; font-weight: 600; font-size: 1.2rem; flex: 1; }
+.data-row strong { font-size: 1.4rem; font-weight: 700; color: #000; text-align: right; flex: 1; }
+
+.affiliations-text { font-size: 1.3rem; font-weight: 700; color: #000; margin-top: 5px; }
+
+/* Edit States */
+.edit-icon { color: #000; margin-right: 15px; font-size: 1rem; }
+.profile-card input { 
+    flex: 1; text-align: right; background: transparent; border: none; 
+    font-weight: 700; font-size: 1.4rem; outline: none; border-bottom: 1px dashed var(--dark-purple);
+}
+.edit-area { 
+    width: 100%; border: none; background: transparent; font-family: inherit; 
+    font-weight: 700; font-size: 1.3rem; margin-top: 10px; min-height: 100px;
+}
+
+.edit-actions { display: flex; gap: 20px; margin-top: 40px; }
+.edit-actions button { flex: 1; padding: 18px; border: none; border-radius: 15px; font-weight: 700; font-size: 1.2rem; cursor: pointer; }
+.btn-cancel { background: #CCACE6; color: white; }
+.btn-save { background: var(--dark-purple); color: white; }
+
+.profile-footer { background: var(--lavender); color: #fff; text-align: center; padding: 30px; font-weight: 600; }
