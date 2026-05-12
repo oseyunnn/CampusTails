@@ -1,14 +1,17 @@
 /* --- VARIABLES --- */
 :root {
+    /* Existing variables */
     --primary-purple: #7B61FF;
     --dark-purple: #6D59A4;
-    --active-purple: #5A41D9;
     --btn-purple: #7E57C2;
-    --bg-tools: #F9E2F9;
     --stat-pink: #F1A7B4;
-    --stat-lavender: #F3C4F3;
+    --stat-lavender: #B899E2;
     --stat-blue: #8C96E6;
-    --stat-purple: #B899E2;
+    
+    /* New Guest Page Specifics */
+    --guest-gradient-top: #B5A8F1;
+    --guest-pink-btn: #F1A7B4; /* Reusing stat-pink */
+    --text-white: #FFFFFF;
 }
 
 /* --- RESET & GLOBALS --- */
