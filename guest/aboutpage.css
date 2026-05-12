@@ -1,0 +1,182 @@
+/* --- ABOUT HERO --- */
+.about-hero {
+    background-color: var(--stat-lavender); /* Match the lavender border in screenshot */
+    padding: 20px 40px;
+}
+
+.hero-image-container {
+    position: relative;
+    width: 100%;
+    height: 550px;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.hero-bg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: brightness(0.9);
+}
+
+.hero-overlay-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    color: white;
+    width: 100%;
+}
+
+.hero-overlay-text .small-label {
+    font-size: 3rem;
+    font-weight: 700;
+    display: block;
+    margin-bottom: -20px;
+    text-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+.hero-overlay-text .main-title {
+    font-size: 9rem;
+    font-weight: 700;
+    letter-spacing: -2px;
+    text-shadow: 0 10px 30px rgba(0,0,0,0.4);
+}
+
+/* --- MISSION & VISION --- */
+.mission-vision {
+    padding: 100px 10%;
+    background: white;
+}
+
+.mv-row {
+    display: flex;
+    align-items: center;
+    gap: 80px;
+    margin-bottom: 80px;
+}
+
+.mv-row.reverse {
+    flex-direction: row-reverse;
+}
+
+.mv-text {
+    flex: 1;
+}
+
+.mv-text .label {
+    font-size: 1.5rem;
+    color: #444;
+    display: block;
+}
+
+.mv-text .purple-title {
+    font-size: 5rem;
+    color: var(--primary-purple);
+    line-height: 1;
+    margin-bottom: 20px;
+}
+
+.mv-text p {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: #555;
+    max-width: 500px;
+}
+
+.mv-image {
+    flex: 1.2;
+}
+
+.mv-image img {
+    width: 100%;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+/* --- CAMPUS CREW SECTION --- */
+.crew-section {
+    background-color: var(--bg-tools); /* The soft pink from your root */
+    padding: 80px 8%;
+}
+
+.section-intro {
+    text-align: left;
+    margin-bottom: 40px;
+}
+
+.section-intro p { font-size: 1.5rem; color: #444; }
+.crew-title-main { 
+    font-size: 5rem; 
+    color: var(--primary-purple); 
+    line-height: 1;
+    text-shadow: 2px 2px 0 rgba(123, 97, 255, 0.2);
+}
+
+.crew-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30px;
+}
+
+.crew-card {
+    background: #eeeeee80; /* Transparent light gray */
+    padding: 40px;
+    border-radius: 40px;
+    text-align: center;
+    transition: 0.3s ease;
+}
+
+.crew-card:hover {
+    background: white;
+    transform: translateY(-5px);
+}
+
+.crew-card h3 { font-size: 2rem; margin-bottom: 5px; color: #111; }
+.crew-card .since { 
+    display: block; 
+    color: #666; 
+    font-size: 0.9rem; 
+    margin-bottom: 20px; 
+}
+.crew-card p { font-size: 1rem; color: #444; line-height: 1.5; }
+
+/* --- CTA FOOTER --- */
+.join-crew-cta {
+    background: linear-gradient(to bottom, var(--bg-tools) 50%, var(--stat-blue) 50%);
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    padding: 0 10%;
+    position: relative;
+    overflow: hidden;
+}
+
+.cta-image { width: 45%; }
+.cta-image img { width: 100%; display: block; filter: drop-shadow(0 0 10px rgba(0,0,0,0.1)); }
+
+.cta-content {
+    width: 50%;
+    padding-bottom: 80px;
+    color: white;
+}
+
+.cta-content h2 { font-size: 5rem; line-height: 0.9; margin-bottom: 10px; }
+.cta-content p { font-size: 1.3rem; margin-bottom: 25px; font-weight: 500; }
+
+.socials { display: flex; gap: 20px; font-size: 2.5rem; }
+
+/* --- RESPONSIVE --- */
+@media (max-width: 1100px) {
+    .mv-row, .mv-row.reverse { flex-direction: column; gap: 40px; text-align: center; }
+    .mv-text p { margin: 0 auto; }
+    .hero-overlay-text .main-title { font-size: 5rem; }
+}
+
+@media (max-width: 800px) {
+    .crew-grid { grid-template-columns: 1fr; }
+    .join-crew-cta { flex-direction: column; align-items: center; text-align: center; }
+    .cta-content { width: 100%; padding-top: 40px; }
+    .socials { justify-content: center; }
+}
