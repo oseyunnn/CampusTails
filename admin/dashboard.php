@@ -82,10 +82,11 @@ if ($total_pets > 0) {
                     <div class="paw-circle"><i class="fas fa-paw"></i></div>
                     <p>Add a PawFriend</p>
                 </div>
-                <div class="tool-card">
+                <div class="tool-card" onClick="location.href='vaccination_records/vaccination.php'">
                     <div class="paw-circle"><i class="fas fa-file-medical"></i></div>
                     <p>Vaccination Records</p>
                 </div>
+            </a>
                 <div class="tool-card">
                     <div class="paw-circle"><i class="fas fa-utensils"></i></div>
                     <p>Donations Directory</p>

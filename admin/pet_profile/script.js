@@ -144,6 +144,58 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 }
 
+    window.deletePet = async function() {
+    const petId = document.querySelector('input[name="pet_id"]').value;
+    const petName = document.querySelector('input[name="name"]').value;
+
+    if (confirm(`Are you sure you want to delete ${petName}? This action cannot be undone.`)) {
+        try {
+            const res = await fetch('delete_pet.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: `pet_id=${petId}`
+            });
+            
+            const result = await res.json();
+            
+            if (result.success) {
+                alert("Pet record deleted successfully.");
+                // Redirect back to the pets directory
+                window.location.href = '../pets_directory/pets.php';
+            } else {
+                alert("Error: " + result.message);
+            }
+        } catch (err) {
+            alert("Failed to connect to server.");
+        }
+    }
+}
+
+        function setupImagePreview(inputId, previewId) {
+        const input = document.getElementById(inputId);
+        const preview = document.getElementById(previewId);
+
+        if (input && preview) {
+            input.addEventListener('change', function() {
+                const file = this.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        // Apply the new image as background preview
+                        preview.style.backgroundImage = `url('${e.target.result}')`;
+                        // Optional: Add a class to indicate it's a new unsaved preview
+                        preview.classList.add('preview-active');
+                    }
+                    reader.readAsDataURL(file);
+                }
+            });
+        }
+    }
+
+    // Initialize previews for both Cover and Profile images
+    setupImagePreview('cover-in', 'cover-prev');
+    setupImagePreview('profile-in', 'profile-prev');
+    
     // Modal Helpers
     window.goToStep2 = () => { document.getElementById('step1').style.display='none'; document.getElementById('step2').style.display='block'; }
     window.goToStep1 = () => { document.getElementById('step2').style.display='none'; document.getElementById('step1').style.display='block'; }
