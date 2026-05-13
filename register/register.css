@@ -58,5 +58,35 @@ input:focus { border-color: var(--primary-purple); }
 .footer-img { height: 120%; position: absolute; bottom: 0; right: 10%; }
 .socials { font-size: 2rem; display: flex; gap: 20px; margin-top: 15px; }
 
+.terms-container {
+    display: flex;
+    align-items: center; /* Vertically centers the checkbox with text */
+    justify-content: flex-start; /* Aligns to the left; change to center if desired */
+    gap: 10px; /* Space between checkbox and text */
+    margin: 20px 0;
+    font-size: 0.9rem;
+}
+
+/* IMPORTANT: Override the general input styles for the checkbox */
+.terms-container input[type="checkbox"] {
+    width: 18px;    /* Specific size */
+    height: 18px;   /* Specific size */
+    margin: 0;      /* Remove default margins */
+    cursor: pointer;
+    padding: 0;     /* Remove padding inherited from general inputs */
+    accent-color: var(--primary-purple); /* Makes the checkmark match your theme */
+}
+
+.terms-container label {
+    cursor: pointer;
+    margin: 0;
+    color: #444;
+}
+
+.terms-container a {
+    color: #0000FF; /* Blue color from your screenshot */
+    text-decoration: underline;
+}
+
 /* Hide Faculty/Student specific rows by default */
 #programBox, #yearBox, #officeBox { display: none; }

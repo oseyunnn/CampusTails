@@ -1,40 +1,66 @@
 <?php
-require_once '../db_connection.php';
+include('../utils/db_config.php');
+
+$error = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // ... (Your variable collection stays the same) ...
+    // 1. Collect Data from Form
+    $role = $_POST['role']; // 'student' or 'faculty'
+    $username = $_POST['username'];
+    $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
 
-    try {
-        // SQL INSERT using PDO placeholders
-        $sql = "INSERT INTO users (first_name, last_name, mi, id_number, email, birthday, role, program, year_level, office, contact, username, password, affiliations, user_type) 
-                VALUES (:fname, :lname, :mi, :id_num, :email, :bday, :role, :prog, :year, :off, :cont, :user, :pass, :aff, :utype)";
+    // 2. Check PawCrewCode for Admin Privileges (Logic from before)
+    $account_type = 'user';
+    if (!empty($_POST['crew_code'])) {
+        $codeCheck = supabase_query("admin_codes?admin_code=eq." . $_POST['crew_code']);
+        if (!empty($codeCheck)) { $account_type = 'admin'; }
+    }
+
+    // 3. Prepare User Data
+    $userData = [
+        "first_name" => $_POST['first_name'],
+        "last_name"  => $_POST['last_name'],
+        "username"   => $username,
+        "email"      => $_POST['email'],
+        "password_hash" => $password,
+        "contact_number" => $_POST['contact'],
+        "affiliation" => $_POST['affiliations'],
+        "role" => $role,
+        "account_type" => $account_type
+    ];
+
+    // 4. Insert into 'users' table
+    $userResponse = supabase_query("users", "POST", $userData);
+
+    // If Supabase returns the new user object (it should have 'user_id' because of return=representation)
+    if (isset($userResponse[0]['user_id'])) {
+        $new_uuid = $userResponse[0]['user_id'];
+
+        // 5. Insert into the specific profile table based on role
+        if ($role === 'student') {
+            $profileData = [
+                "user_id" => $new_uuid,
+                "student_number" => $_POST['id_number'],
+                "program" => $_POST['program'],
+                "year_level" => $_POST['year_level']
+            ];
+            supabase_query("student_profiles", "POST", $profileData);
+        } else {
+            $profileData = [
+                "user_id" => $new_uuid,
+                "office" => $_POST['office'],
+                "institutional_email" => $_POST['email']
+            ];
+            supabase_query("faculty_profiles", "POST", $profileData);
+        }
+
+        // --- THE REDIRECT ---
+        // Go up one level to the project root, then into the login folder
+        header("Location: ../login/index.php?signup=success");
+        exit(); // Always exit after a header redirect
         
-        $stmt = $conn->prepare($sql);
-        
-        // Execute with an array (much cleaner than mysqli bind_param)
-        $stmt->execute([
-            ':fname' => $fname,
-            ':lname' => $lname,
-            ':mi'    => $mi,
-            ':id_num'=> $id_num,
-            ':email' => $email,
-            ':bday'  => $birthday,
-            ':role'  => $role,
-            ':prog'  => $program,
-            ':year'  => $year_level,
-            ':off'   => $office,
-            ':cont'  => $contact,
-            ':user'  => $username,
-            ':pass'  => $password,
-            ':aff'   => $affiliations,
-            ':utype' => $user_type
-        ]);
-
-        header("Location: ../login/login.php?signup=success");
-        exit();
-
-    } catch (PDOException $e) {
-        $error = "Registration failed: " . $e->getMessage();
+    } else {
+        $error = "Registration failed. Username or Email might already exist.";
     }
 }
 ?>
@@ -149,9 +175,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 </div>
 
                 <div class="form-footer">
-                    <label class="check-container">
-                        <input type="checkbox" required> By signing up, I agree to the <a href="#">Terms and Conditions</a>.
-                    </label>
+                 <div class="terms-container">
+                      <input type="checkbox" id="terms" required>
+                     <label for="terms">By signing up, I agree to the <a href="#">Terms and Conditions</a>.</label>
+                </div>
                     <button type="submit" class="signup-btn">SIGNUP</button>
                 </div>
             </form>

@@ -1,18 +1,44 @@
 <?php
-// Ensure NO spaces or text exist above this <?php tag
+session_start();
+include('../utils/db_config.php');
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $username = $_POST['username'] ?? '';
     $password = $_POST['password'] ?? '';
-    
-    if ($username === "admin" && $password === "password1234") {
-        // Path: Go up one folder, then into admin folder to dashboard.php
-        header("Location: ../admin/dashboard.php"); 
-        exit();
+
+    // Fetch user and join profile tables
+    $endpoint = "users?username=eq.$username&select=*,student_profiles(*),faculty_profiles(*)";
+    $result = supabase_query($endpoint);
+
+    if (!empty($result)) {
+        $user = $result[0];
+        
+        // Verify Password
+        if (password_verify($password, $user['password_hash'])) {
+            $_SESSION['user_id'] = $user['user_id'];
+            $_SESSION['username'] = $user['username'];
+            $_SESSION['role'] = $user['role'];
+            $_SESSION['account_type'] = $user['account_type'];
+
+            // Redirect based on account type
+        
+        if ($user['account_type'] === 'admin') {
+    // Go up one, then into admin folder
+             header("Location: ../admin/dashboard.php");
+        } else {
+    // Go up one, then into user_profile folder
+            header("Location: ../user_profile/user_profile.php");
+        }
+            exit();
+        } else {
+            $error = "Incorrect password!";
+        }
     } else {
-        $error = "Invalid credentials!";
+        $error = "User not found!";
     }
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -56,6 +82,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <h3>Welcome Back!</h3>
                     </div>
 
+                    <!-- Inside login/index.php -->
+                    <?php if(isset($_GET['signup']) && $_GET['signup'] == 'success'): ?>
+                    <p style="color: #4CAF50; background: #e8f5e9; padding: 10px; border-radius: 10px; font-size: 0.9rem; font-weight: 600;">
+                     Registration successful! You can now log in.
+                    </p>
+                    <?php endif; ?>
+                    
                     <!-- action="" ensures it posts to the current file -->
                     <form action="" method="POST">
                         <div class="auth-row">
@@ -74,14 +107,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         </div>
 
                         <button type="submit" class="submit-btn">LOGIN</button>
-                        <p class="signup-link">Don't have an account yet? <a href="#">Signup here!</a></p>
+                        <p class="signup-link">Don't have an account yet? <a href="../register/index.php">Signup here!</a></p>
                     </form>
                 </div>
             </section>
         </main>
 
         <footer class="login-footer">
-            <p>Do you want to be a part of our PawCrew? <a href="../register/register.php">Send us an email!</a></p>
+            <p>Do you want to be a part of our PawCrew? <a href="../register/index.php">Send us an email!</a></p>
         </footer>
 
         <!-- CHARACTER -->
