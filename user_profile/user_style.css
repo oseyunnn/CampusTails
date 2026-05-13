@@ -1,89 +1,254 @@
 :root {
     --primary-purple: #7B61FF;
-    --lavender: #9897E2;
     --dark-purple: #6D59A4;
-    --light-pink: #F5C7F7;
-    --bg-gray: #F8F4F4;
+    --lavender: #9897E2;
+    --bg-beige: #F8F4F4;
+    --tab-inactive: #CCACE6;
+    --pink-heart: #F1A7B4;
 }
 
-body { font-family: 'Fredoka', sans-serif; background: #fff; margin: 0; color: var(--dark-purple); }
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Fredoka', sans-serif; }
+body { background-color: #fff; color: var(--dark-purple); min-height: 100vh; display: flex; flex-direction: column; }
 
-/* Navigation */
-header { padding: 20px 5%; }
+header { padding: 25px 5%; }
 .nav-container { 
-    border: 2.5px solid #F0F0F0; border-radius: 50px; 
-    display: flex; justify-content: space-between; align-items: center; padding: 10px 40px; 
+    border: 2px solid #EEE; border-radius: 100px; padding: 10px 40px;
+    display: flex; justify-content: space-between; align-items: center; 
 }
-.logo img { height: 40px; }
-.main-nav a { text-decoration: none; color: var(--primary-purple); margin-left: 20px; font-weight: 600; }
+.logo img { height: 40px; cursor: pointer; transition: 0.3s; }
+.logo img:hover { transform: scale(1.1); }
+
+.main-nav a { text-decoration: none; color: var(--primary-purple); font-weight: 600; margin-left: 25px; }
 .main-nav a.active { border-bottom: 3px solid var(--primary-purple); padding-bottom: 5px; }
 
-.container { max-width: 900px; margin: 0 auto; padding-bottom: 100px; }
-.page-title { text-align: center; font-size: 3rem; margin: 40px 0; }
+.container { width: 90%; max-width: 950px; margin: 0 auto; flex: 1; }
+.page-title { text-align: center; font-size: 2.8rem; margin: 30px 0; font-weight: 700; }
 
 /* Hero Section */
 .hero-block { position: relative; margin-bottom: 40px; }
 .cover-photo { 
-    height: 300px; background: var(--lavender); border-radius: 20px; 
+    height: 320px; background-color: var(--lavender); border-radius: 40px; 
+    background-size: cover; background-position: center;
     display: flex; align-items: center; justify-content: center;
 }
-.cover-placeholder-icon { font-size: 5rem; color: #fff; opacity: 0.8; }
+.placeholder-icon { font-size: 6rem; color: white; opacity: 0.8; }
 
-.hero-id-area { display: flex; align-items: flex-end; padding: 0 40px; margin-top: -80px; gap: 30px; }
+.hero-id-area { display: flex; align-items: flex-end; gap: 30px; padding: 0 50px; margin-top: -90px; }
 .avatar-border { 
-    width: 200px; height: 200px; background: #fff; border-radius: 50%; 
-    padding: 10px; box-shadow: 0 10px 20px rgba(0,0,0,0.05); 
+    width: 200px; height: 200px; border-radius: 50%; border: 8px solid white; 
+    background: white; overflow: hidden; box-shadow: 0 8px 25px rgba(0,0,0,0.05); flex-shrink: 0;
 }
 .avatar-img { 
-    width: 100%; height: 100%; background: var(--dark-purple); border-radius: 50%; 
-    display: flex; align-items: center; justify-content: center; color: white; font-size: 4rem;
+    width: 100%; height: 100%; background: var(--dark-purple); 
+    background-size: cover; display: flex; align-items: center; justify-content: center; color: white; font-size: 5rem;
 }
 
-.name-header h2 { font-size: 5rem; margin: 0; line-height: 1; letter-spacing: -2px; }
-
-/* Pills */
+.name-controls h2 { font-size: 5rem; color: var(--dark-purple); line-height: 1; letter-spacing: -2px; }
 .hero-pills { display: flex; gap: 15px; margin-top: 15px; }
 .pill { 
-    background: #F3F0F0; border: none; padding: 8px 35px; border-radius: 30px; 
-    font-weight: 600; color: #555; display: flex; align-items: center; gap: 10px; font-size: 1rem;
+    background: #F2EEEE; padding: 10px 35px; border-radius: 30px; border: none;
+    font-weight: 600; color: #555; display: flex; align-items: center; gap: 10px; cursor: pointer; transition: 0.3s;
 }
-.pill i.fa-heart { color: #F1A7B4; }
+.pill:hover { transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+.pill i.fa-heart { color: var(--pink-heart); }
 
 /* Tabs */
-.tab-switcher { display: flex; gap: 20px; margin: 40px 0 20px; }
-.tab-btn { 
-    flex: 1; padding: 18px; border: none; border-radius: 12px; font-weight: 700; 
-    font-size: 1.2rem; cursor: pointer; transition: 0.3s;
+.tab-switcher { display: flex; gap: 15px; margin: 50px 0 30px; }
+.tab-link { 
+    flex: 1; padding: 18px; border-radius: 15px; border: none; font-weight: 700; font-size: 1.2rem;
+    cursor: pointer; background: var(--tab-inactive); color: white; transition: 0.3s;
 }
-.tab-btn.active { background: var(--dark-purple); color: #fff; }
-.tab-btn:not(.active) { background: #CCACE6; color: #fff; }
+.tab-link.active { background: var(--dark-purple); }
 
-/* Profile Card */
-.profile-card { background: var(--bg-gray); border-radius: 25px; padding: 40px 60px; }
+/* Data Card */
+.data-card { background: var(--bg-beige); border-radius: 40px; padding: 40px 60px; margin-bottom: 60px; }
 .data-row { 
     display: flex; justify-content: space-between; align-items: center; 
-    padding: 20px 0; border-bottom: 1px solid #E0E0E0; 
+    padding: 22px 0; border-bottom: 1.5px solid #EAEAEA; 
 }
-.data-row.no-border { border: none; padding-bottom: 5px; }
+.data-row.no-border { border: none; padding-bottom: 10px; }
 .data-row label { color: #A0A0A0; font-weight: 600; font-size: 1.2rem; flex: 1; }
-.data-row strong { font-size: 1.4rem; font-weight: 700; color: #000; text-align: right; flex: 1; }
+.data-row strong { color: #000; font-size: 1.4rem; font-weight: 700; text-align: right; flex: 1; }
 
-.affiliations-text { font-size: 1.3rem; font-weight: 700; color: #000; margin-top: 5px; }
+.affiliations-display { font-size: 1.3rem; margin-top: 10px; }
 
-/* Edit States */
-.edit-icon { color: #000; margin-right: 15px; font-size: 1rem; }
-.profile-card input { 
-    flex: 1; text-align: right; background: transparent; border: none; 
-    font-weight: 700; font-size: 1.4rem; outline: none; border-bottom: 1px dashed var(--dark-purple);
+/* Edit Form Styles */
+.edit-label-icon { font-size: 0.9rem; margin-right: 15px; color: #000; }
+.data-card input { 
+    flex: 1; border: none; background: transparent; text-align: right;
+    font-weight: 700; font-size: 1.4rem; color: #000; outline: none; border-bottom: 1px dashed var(--dark-purple);
 }
-.edit-area { 
-    width: 100%; border: none; background: transparent; font-family: inherit; 
-    font-weight: 700; font-size: 1.3rem; margin-top: 10px; min-height: 100px;
+.edit-textarea { 
+    width: 100%; min-height: 120px; border: none; background: transparent; 
+    font-family: inherit; font-weight: 700; font-size: 1.3rem; outline: none; margin-top: 10px;
 }
 
-.edit-actions { display: flex; gap: 20px; margin-top: 40px; }
-.edit-actions button { flex: 1; padding: 18px; border: none; border-radius: 15px; font-weight: 700; font-size: 1.2rem; cursor: pointer; }
+.edit-actions { display: flex; gap: 20px; margin-top: 50px; }
+.edit-actions button { flex: 1; padding: 20px; border: none; border-radius: 15px; font-weight: 700; font-size: 1.2rem; cursor: pointer; }
+.btn-cancel { background: var(--tab-inactive); color: white; }
+.btn-save { background: var(--dark-purple); color: white; }
+
+/* Specific Bar for Edit Screen */
+.section-bar {
+    width: 100%;
+    background-color: var(--dark-purple);
+    color: white;
+    text-align: center;
+    padding: 20px;
+    border-radius: 15px;
+    font-size: 1.4rem;
+    font-weight: 600;
+    margin-bottom: 40px;
+}
+
+/* Edit Card Row Styling */
+.edit-card .data-row {
+    justify-content: flex-start;
+}
+
+.row-label {
+    flex: 0 0 250px;
+    color: #A0A0A0;
+    font-weight: 600;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.row-label i {
+    color: #000;
+    font-size: 1rem;
+}
+
+.edit-card input {
+    flex: 1;
+    border: none;
+    background: transparent;
+    font-weight: 700;
+    font-size: 1.4rem;
+    text-align: right;
+    outline: none;
+    color: #000;
+}
+
+/* Edit Footer Buttons */
+.edit-footer-btns {
+    display: flex;
+    justify-content: space-between;
+    gap: 30px;
+    margin-bottom: 80px;
+}
+
+.btn-cancel, .btn-save {
+    flex: 1;
+    padding: 20px;
+    border-radius: 15px;
+    text-align: center;
+    font-weight: 700;
+    font-size: 1.3rem;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
 .btn-cancel { background: #CCACE6; color: white; }
 .btn-save { background: var(--dark-purple); color: white; }
 
-.profile-footer { background: var(--lavender); color: #fff; text-align: center; padding: 30px; font-weight: 600; }
+.btn-cancel:hover, .btn-save:hover { opacity: 0.9; transform: scale(1.02); }
+
+.profile-footer { background-color: var(--lavender); color: white; text-align: center; padding: 30px; font-weight: 600; }
+
+/* Tab visibility logic */
+.tab-content { display: none; }
+.tab-content.active { display: block; animation: fadeIn 0.4s ease; }
+
+/* Pets Grid Layout */
+.pets-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* 2 columns as seen in Figma */
+    gap: 30px;
+    margin-bottom: 50px;
+}
+
+/* Pet Card Styling */
+.pet-card-mini {
+    background-color: var(--dark-purple);
+    border-radius: 60px; /* High rounded corners for bubbly look */
+    padding: 25px;
+    display: flex;
+    align-items: center;
+    color: white;
+    box-shadow: 0 10px 25px rgba(109, 89, 164, 0.2);
+}
+
+.pet-img-box {
+    position: relative;
+    width: 160px;
+    height: 160px;
+    flex-shrink: 0;
+}
+
+.pet-img-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 4px solid rgba(255,255,255,0.2);
+}
+
+/* Heart Badge on Image */
+.heart-badge {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    background: white;
+    color: var(--pink-heart);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.pet-info-box {
+    padding-left: 25px;
+}
+
+.pet-info-box h3 {
+    font-size: 3.5rem; /* Large bubbly font */
+    margin: 0;
+    line-height: 1;
+}
+
+.pet-info-box p {
+    font-size: 0.85rem;
+    margin: 10px 0 15px;
+    opacity: 0.9;
+    line-height: 1.4;
+}
+
+.see-more-mini {
+    display: inline-block;
+    background-color: var(--pink-heart);
+    color: white;
+    text-decoration: none;
+    padding: 8px 30px;
+    border-radius: 20px;
+    font-weight: 700;
+    font-size: 0.9rem;
+    transition: 0.3s;
+}
+
+.see-more-mini:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.1);
+}
+
+.no-favs { text-align: center; width: 100%; font-size: 1.2rem; opacity: 0.6; }
+
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
