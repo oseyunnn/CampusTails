@@ -29,7 +29,6 @@ if ($total_pets > 0) {
             $adopted_count++;
         }
         
-        // Recently Added Logic (Last 24 hours)
         if (isset($pet['created_at']) && strtotime($pet['created_at']) > $one_day_ago) {
             $recent_count++;
         }
@@ -44,7 +43,7 @@ if ($total_pets > 0) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CampusTails | Admin Dashboard</title>
-    <link rel="stylesheet" href="style.css?v=1.1">
+    <link rel="stylesheet" href="style.css?v=2.0">
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>

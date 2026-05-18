@@ -1,19 +1,21 @@
 /* --- VARIABLES --- */
 :root {
-    /* Existing variables */
     --primary-purple: #7B61FF;
     --dark-purple: #6D59A4;
     --btn-purple: #7E57C2;
+
     --stat-pink: #F1A7B4;
-    --stat-lavender: #B899E2;
+    --stat-lavender: #F3C6F2;
     --stat-blue: #8C96E6;
-    
-    /* New Guest Page Specifics */
+    --stat-purple: #B899E2;
+
+    --active-purple: #5D43E0;
+    --bg-tools: #F8F4FF;
+
     --guest-gradient-top: #B5A8F1;
-    --guest-pink-btn: #F1A7B4; /* Reusing stat-pink */
+    --guest-pink-btn: #F1A7B4;
     --text-white: #FFFFFF;
 }
-
 /* --- RESET & GLOBALS --- */
 * { 
     margin: 0; 
