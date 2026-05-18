@@ -8,7 +8,7 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'superadmin') { header("L
 // Fetch Stats
 $users = supabase_query("paw_users");
 $pets = supabase_query("pets");
-$admins = supabase_query("paw_users?role=eq.admin");
+$admins = supabase_query("paw_users?account_type=eq.admin");
 $codes = supabase_query("admin_codes?is_active=eq.true");
 
 $logs = supabase_query("activity_logs?order=created_at.desc&limit=8");
