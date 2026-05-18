@@ -2,10 +2,10 @@
 session_start();
 include('../utils/db_config.php');
 
-if (!isset($_SESSION['user_id'])) {
-    header("Location: ../login/index.php");
-    exit();
-}
+// if (!isset($_SESSION['user_id'])) {
+//     header("Location: ../login/index.php");
+//     exit();
+// }
 
 $user_id = $_SESSION['user_id'];
 

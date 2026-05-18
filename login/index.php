@@ -26,7 +26,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             if ($user['account_type'] === 'admin') {
                 header("Location: ../admin/dashboard.php");
             } else {
-                header("Location: ../user_profile/index.php");
+                header("Location: ../user/index.php");
             }
             exit();
         } else {

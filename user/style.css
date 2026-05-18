@@ -1,0 +1,170 @@
+/* --- REGISTRATION AND OVERRIDE COMPLEMENTS FOR USER COMPONENT --- */
+
+.profile-card {
+    background: white;
+    border-radius: 28px;
+    padding: 35px 25px;
+    text-align: center;
+    box-shadow: 0 8px 24px rgba(147, 150, 230, 0.08);
+}
+
+.avatar-holder {
+    width: 125px;
+    height: 125px;
+    border-radius: 50%;
+    margin: 0 auto 20px;
+    overflow: hidden;
+    border: 4px solid var(--primary-purple);
+    background: #f7f7f7;
+}
+
+.avatar-img { 
+    width: 100%; 
+    height: 100%; 
+    object-fit: cover; 
+}
+
+.user-role-badge {
+    display: inline-block;
+    background: #E8E9FF;
+    color: var(--primary-purple);
+    padding: 5px 16px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    margin-bottom: 25px;
+}
+
+.meta-info { 
+    font-size: 0.9rem; 
+    color: #666; 
+    margin: 12px 0; 
+    text-align: left; 
+}
+
+.meta-info i { 
+    color: var(--primary-purple); 
+    width: 22px; 
+}
+
+.user-affiliation-segment { 
+    margin-top: 20px; 
+    padding-top: 15px; 
+    border-top: 1px dashed #eee; 
+    text-align: left; 
+    font-size: 0.9rem; 
+}
+
+/* Custom Highlight Theming Rule Extensions */
+.fav-metric-theme { 
+    border-left-color: #FF8BA7 !important; 
+}
+
+.fav-metric-theme i { 
+    color: #FF8BA7 !important; 
+}
+
+/* Gallery Header Alignment Styles */
+.panel-headline { 
+    margin: 25px 0 15px; 
+}
+
+.panel-headline h3 { 
+    color: #333; 
+    font-size: 1.3rem; 
+    margin: 0; 
+}
+
+.rotation-notice { 
+    font-size: 0.85rem; 
+    color: #999; 
+    font-weight: 400; 
+    margin-left: 5px; 
+}
+
+/* Responsive Custom Pet Cards Modifications */
+.pet-card-item { 
+    padding: 0 !important; 
+    overflow: hidden; 
+    display: flex; 
+    flex-direction: column; 
+}
+
+.pet-img-frame { 
+    position: relative; 
+    height: 160px; 
+    width: 100%; 
+    background: #f0f0f0; 
+}
+
+.pet-img-frame img { 
+    width: 100%; 
+    height: 100%; 
+    object-fit: cover; 
+}
+
+/* Float Badging Placement Indicators */
+.status-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    padding: 4px 10px;
+    border-radius: 10px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: white;
+}
+
+.badge-monitoring { background: var(--primary-purple); }
+.badge-adopted { background: #52C41A; }
+
+.pet-card-info { 
+    padding: 15px; 
+    flex: 1; 
+}
+
+.pet-card-header { 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    margin-bottom: 10px; 
+}
+
+.pet-card-header h4 { 
+    margin: 0; 
+    font-size: 1.1rem; 
+    color: #333; 
+}
+
+.species-label { 
+    font-size: 0.75rem; 
+    background: #f0f0f0; 
+    padding: 2px 8px; 
+    border-radius: 6px; 
+    color: #555; 
+}
+
+.pet-meta-desc { 
+    font-size: 0.85rem; 
+    color: #666; 
+    margin: 6px 0; 
+}
+
+.pet-meta-desc i { 
+    color: var(--primary-purple); 
+}
+
+/* Graceful Fallback Layout rules */
+.empty-fallback-state {
+    grid-column: 1 / -1;
+    text-align: center;
+    background: white;
+    padding: 50px;
+    border-radius: 20px;
+    color: #bbb;
+}
+
+.empty-fallback-state i { 
+    font-size: 2.5rem; 
+    margin-bottom: 10px; 
+}
