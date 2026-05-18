@@ -29,7 +29,6 @@ if ($total_pets > 0) {
             $adopted_count++;
         }
         
-        // Recently Added Logic (Last 24 hours)
         if (isset($pet['created_at']) && strtotime($pet['created_at']) > $one_day_ago) {
             $recent_count++;
         }
