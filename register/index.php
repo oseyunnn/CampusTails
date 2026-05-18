@@ -4,12 +4,12 @@ include('../utils/db_config.php');
 $error = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // 1. Collect Data from Form
-    $role = $_POST['role']; // 'student' or 'faculty'
+    // 1. Collect Data
+    $role = $_POST['role']; 
     $username = $_POST['username'];
     $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
 
-    // 2. Check PawCrewCode for Admin Privileges (Logic from before)
+    // 2. Check PawCrewCode
     $account_type = 'user';
     if (!empty($_POST['crew_code'])) {
         $codeCheck = supabase_query("admin_codes?admin_code=eq." . $_POST['crew_code']);
@@ -29,39 +29,33 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         "account_type" => $account_type
     ];
 
-    // 4. Insert into 'users' table
-    $userResponse = supabase_query("users", "POST", $userData);
+    // 4. Attempt Insert
+    $userResponse = supabase_query("paw_users", "POST", $userData);
 
-    // If Supabase returns the new user object (it should have 'user_id' because of return=representation)
-    if (isset($userResponse[0]['user_id'])) {
-        $new_uuid = $userResponse[0]['user_id'];
-
-        // 5. Insert into the specific profile table based on role
-        if ($role === 'student') {
-            $profileData = [
-                "user_id" => $new_uuid,
-                "student_number" => $_POST['id_number'],
-                "program" => $_POST['program'],
-                "year_level" => $_POST['year_level']
-            ];
-            supabase_query("student_profiles", "POST", $profileData);
-        } else {
-            $profileData = [
-                "user_id" => $new_uuid,
-                "office" => $_POST['office'],
-                "institutional_email" => $_POST['email']
-            ];
-            supabase_query("faculty_profiles", "POST", $profileData);
-        }
-
-        // --- THE REDIRECT ---
-        // Go up one level to the project root, then into the login folder
-        header("Location: ../login/index.php?signup=success");
-        exit(); // Always exit after a header redirect
-        
-    } else {
-        $error = "Registration failed. Username or Email might already exist.";
+    // DEBUG: If you get an error, this will stop the script and show it
+    if (!isset($userResponse[0]['user_id'])) {
+        echo "<h3>Supabase Error Debug:</h3><pre>";
+        print_r($userResponse);
+        echo "</pre>";
+        die(); 
     }
+
+    // 5. If Success, Insert Profile
+    $new_uuid = $userResponse[0]['user_id'];
+    if ($role === 'student') {
+        $profileData = ["user_id" => $new_uuid, "student_number" => $_POST['id_number'], "program" => $_POST['program'], "year_level" => $_POST['year_level']];
+        supabase_query("student_profiles", "POST", $profileData);
+    } else {
+        $profileData = ["user_id" => $new_uuid, "office" => $_POST['office'], "institutional_email" => $_POST['email']];
+        supabase_query("faculty_profiles", "POST", $profileData);
+    }
+
+    // 6. POP-UP AND REDIRECT
+    echo "<script>
+            alert('Sign in successful! You can now log in.');
+            window.location.href = '../login/index.php';
+          </script>";
+    exit();
 }
 ?>
 

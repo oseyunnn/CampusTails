@@ -2,33 +2,30 @@
 session_start();
 include('../utils/db_config.php');
 
+$error = "";
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $username = $_POST['username'] ?? '';
     $password = $_POST['password'] ?? '';
 
-    // Fetch user and join profile tables
     $endpoint = "users?username=eq.$username&select=*,student_profiles(*),faculty_profiles(*)";
     $result = supabase_query($endpoint);
 
-    if (!empty($result)) {
+    // FIX: Check if result is null (Connection Error) or empty (Not Found)
+    if ($result === null) {
+        $error = "Connection Error: Please check your internet or .env settings.";
+    } elseif (is_array($result) && isset($result[0])) {
         $user = $result[0];
         
-        // Verify Password
         if (password_verify($password, $user['password_hash'])) {
             $_SESSION['user_id'] = $user['user_id'];
-            $_SESSION['username'] = $user['username'];
             $_SESSION['role'] = $user['role'];
-            $_SESSION['account_type'] = $user['account_type'];
-
-            // Redirect based on account type
-        
-        if ($user['account_type'] === 'admin') {
-    // Go up one, then into admin folder
-             header("Location: ../admin/dashboard.php");
-        } else {
-    // Go up one, then into user_profile folder
-            header("Location: ../user_profile/user_profile.php");
-        }
+            
+            if ($user['account_type'] === 'admin') {
+                header("Location: ../admin/dashboard.php");
+            } else {
+                header("Location: ../user_profile/index.php");
+            }
             exit();
         } else {
             $error = "Incorrect password!";
