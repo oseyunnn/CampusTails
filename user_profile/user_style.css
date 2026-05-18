@@ -252,3 +252,95 @@ header { padding: 25px 5%; }
 .no-favs { text-align: center; width: 100%; font-size: 1.2rem; opacity: 0.6; }
 
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+/* Tab content handling states */
+.tab-content {
+    display: none;
+}
+.tab-content.active {
+    display: block;
+}
+
+/* ==========================================================================
+   CUSTOM STYLE TYPOGRAPHY, LINE-SPACING & FOOTER CUSTOMIZATIONS
+   ========================================================================== */
+
+/* 1. Specialized Headings - Applied Irish Grover Font style */
+.profile-heading-name,
+.profile-user-display-name {
+    font-family: 'Irish Grover', cursive !important;
+    letter-spacing: 0.5px;
+}
+
+.profile-user-display-name {
+    font-size: 2rem !important;
+    margin-bottom: 8px !important;
+}
+
+/* 2. Line Spacings & Typography Layout Adjustments */
+.data-card {
+    line-height: 1.8; /* Generous, readable breathing room for textual rows */
+}
+
+.data-row {
+    padding: 16px 0 !important; /* Balanced row padding margins */
+    display: flex;
+    align-items: center;
+}
+
+.data-row label {
+    font-size: 0.95rem;
+    letter-spacing: 0.2px;
+}
+
+.data-row strong {
+    font-size: 1.05rem;
+}
+
+.affiliations-display {
+    line-height: 1.6;
+    padding: 12px 0;
+}
+
+/* 3. Footer Appearance Changes - White Text */
+.profile-footer {
+    color: #FFFFFF !important; /* Converts text from original muted grey to white */
+    font-weight: 500;
+    opacity: 0.95;
+    text-align: center; 
+    padding: 35px 0; 
+    font-size: 0.95rem;
+}
+
+/* Tab context handling rules */
+.tab-content {
+    display: none;
+}
+.tab-content.active {
+    display: block;
+}
+
+/* --- Form Inputs Spacing & Matching Layout System Adjustments --- */
+.data-card input[type="text"] {
+    font-family: 'Fredoka', sans-serif;
+    border: 1px solid #E2E8F0;
+    border-radius: 8px;
+    padding: 8px 12px;
+    width: 60%;
+    margin-left: auto; /* Clean right-hand alignment grid behavior */
+    color: #444;
+    font-size: 0.95rem;
+    transition: border-color 0.2s;
+}
+
+.data-card input[type="text"]:focus {
+    border-color: var(--primary-purple);
+    outline: none;
+}
+
+.edit-label-icon {
+    color: var(--primary-purple);
+    margin-right: 12px;
+    font-size: 0.9rem;
+    opacity: 0.8;
+}

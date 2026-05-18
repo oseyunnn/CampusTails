@@ -11,41 +11,29 @@ if (!isset($_SESSION['user_id'])) {
 
 $user_id = $_SESSION['user_id'];
 
-// Fetch User Data with Student or Faculty details
-try {
-    // Note: Adjusting column names (password_hash, etc) based on your Project_Database.txt
-    $query = "SELECT u.*, s.student_number, s.program, s.year_level, f.office, f.institutional_email 
-              FROM users u 
-              LEFT JOIN student_profiles s ON u.user_id = s.user_id 
-              LEFT JOIN faculty_profiles f ON u.user_id = f.user_id 
-              WHERE u.user_id = :uid";
-    
-    // Assuming your db_config.php provides a PDO object named $conn
-    $stmt = $conn->prepare($query);
-    $stmt->execute([':uid' => $user_id]);
-    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+// Swapped out broken local PDO SQL query for your Supabase API engine
+$user_endpoint = "paw_users?user_id=eq." . urlencode($user_id) . "&select=*";
+$user_results = supabase_query($user_endpoint);
 
-    if (!$user) die("User not found in database.");
-
-} catch (PDOException $e) {
-    die("Database Error: " . $e->getMessage());
+if (is_array($user_results) && isset($user_results[0])) {
+    $user = $user_results[0];
+} else {
+    die("User profile not found in Supabase database.");
 }
 
 // Fetch Favorite Pets for this user
-// Endpoint uses Supabase join syntax: favorites?user_id=eq.ID&select=pets(*)
-$fav_endpoint = "favorites?user_id=eq.$user_id&select=pets(*)";
+$fav_endpoint = "favorites?user_id=eq." . urlencode($user_id) . "&select=*,pets(*)";
 $fav_results = supabase_query($fav_endpoint);
 
-// If the API returns nested objects, we extract the pet data
+// Extract the pet data from the payload
 $favorite_pets = [];
-if (!empty($fav_results)) {
+if (is_array($fav_results)) {
     foreach ($fav_results as $row) {
-        if (isset($row['pets'])) {
+        if (!empty($row['pets'])) {
             $favorite_pets[] = $row['pets'];
         }
     }
 }
-
 ?>
 
 <!DOCTYPE html>
@@ -53,9 +41,9 @@ if (!empty($fav_results)) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CampusTails | <?php echo htmlspecialchars($user['first_name']); ?>'s Profile</title>
+    <title>CampusTails | <?php echo htmlspecialchars($user['first_name'] ?? 'User'); ?>'s Profile</title>
     <link rel="stylesheet" href="user_style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Irish+Grover&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body class="profile-view-body">
@@ -63,125 +51,108 @@ if (!empty($fav_results)) {
     <div class="profile-master-wrapper">
         <header>
             <div class="nav-container">
-                <!-- Resources are in root/resources/ -->
                 <div class="logo"><img src="../resources/Logo.png" alt="CampusTails"></div>
                 <nav class="main-nav">
                     <a href="../dashboard.php">home</a>
                     <a href="../pets_directory/pets.php">pets</a>
                     <a href="#" class="active">profile</a>
-                    <a href="../login/index.php" class="logout-btn">login</a>
+                    <a href="../login/index.php" class="logout-btn">logout</a>
                 </nav>
             </div>
         </header>
 
         <main class="container">
-            <h1 class="page-title">Paw Profile</h1>
+            <h1 class="page-title profile-heading-name">Paw Profile</h1>
 
-            <!-- HERO SECTION -->
             <section class="hero-block">
-                <!-- Cover Photo (Uses user's image or a default purple box) -->
-                <div class="cover-photo" style="background-image: url('<?php echo $user['profile_image'] ?? ''; ?>');">
-                    <?php if(empty($user['profile_image'])): ?>
+                <div class="cover-photo" style="background-image: url('<?php echo htmlspecialchars($user['cover_image'] ?? ''); ?>'); background-color: #9396E6;">
+                    <?php if(empty($user['cover_image'])): ?>
                         <i class="fas fa-image placeholder-icon"></i>
                     <?php endif; ?>
                 </div>
 
                 <div class="hero-id-area">
                     <div class="avatar-border">
-                        <div class="avatar-img" style="background-image: url('<?php echo $user['profile_image'] ?? ''; ?>');">
-                             <?php if(empty($user['profile_image'])): ?>
-                                <i class="fas fa-image"></i>
-                             <?php endif; ?>
+                        <div class="avatar-img" style="background-image: url('<?php echo htmlspecialchars($user['profile_image'] ?? '../resources/avatar-placeholder.png'); ?>'); background-size: cover; background-position: center;">
                         </div>
                     </div>
                     <div class="name-controls">
-                        <h2><?php echo htmlspecialchars($user['first_name']); ?></h2>
+                        <h2 class="profile-user-display-name"><?php echo htmlspecialchars($user['first_name'] ?? 'Paw'); ?></h2>
                         <div class="hero-pills">
-                            <div class="pill"><i class="fas fa-heart"></i> <?php echo ucfirst($user['role']); ?></div>
-                            <!-- Inside user_profile/index.php -->
-                            <a href="edit_profile.php" class="pill edit-btn">
+                            <div class="pill"><i class="fas fa-heart"></i> <?php echo htmlspecialchars(ucfirst($user['role'] ?? 'Member')); ?></div>
+                            <button type="button" id="editTrigger" class="pill edit-btn" style="border:none; cursor:pointer;">
                                 <i class="fas fa-pencil-alt"></i> Edit
-                            </a>
+                            </button>
                         </div>
                     </div>
                 </div>
             </section>
 
-           <!-- TAB SWITCHER -->
-<div class="tab-switcher">
-    <button class="tab-link active" onclick="openTab(event, 'all-about-me')">All About Me</button>
-    <button class="tab-link" onclick="openTab(event, 'my-favorites')">My Favorite Pets</button>
-</div>
+            <div class="tab-switcher">
+                <button class="tab-link active" onclick="openTab(event, 'all-about-me')">All About Me</button>
+                <button class="tab-link" onclick="openTab(event, 'my-favorites')">My Favorite Pets</button>
+            </div>
 
-<!-- TAB 1: ALL ABOUT ME (Your existing view card) -->
-<!-- VIEW MODE: ALL ABOUT ME -->
-            <div id="view-content" class="data-card">
-                <div class="data-row"><label>Full Name</label> <strong><?php echo htmlspecialchars($user['first_name'] . ' ' . $user['last_name']); ?></strong></div>
-                
-                <div class="data-row">
-                    <label><?php echo ($user['role'] == 'student') ? 'Student ID No.' : 'Employee ID'; ?></label> 
-                    <strong><?php echo htmlspecialchars($user['student_number'] ?? $user['id_number'] ?? 'N/A'); ?></strong>
-                </div>
+            <div id="all-about-me" class="tab-content active">
+                <div id="view-content" class="data-card">
+                    <div class="data-row">
+                        <label>Full Name</label> 
+                        <strong><?php echo htmlspecialchars(($user['first_name'] ?? '') . ' ' . ($user['last_name'] ?? '')); ?></strong>
+                    </div>
+                    
+                    <div class="data-row">
+                        <label>Account Role</label> 
+                        <strong><?php echo htmlspecialchars(ucfirst($user['role'] ?? 'Student')); ?></strong>
+                    </div>
 
-                <?php if($user['role'] == 'student'): ?>
-                    <div class="data-row"><label>Program</label> <strong><?php echo htmlspecialchars($user['program'] ?? 'N/A'); ?></strong></div>
-                    <div class="data-row"><label>Year Level</label> <strong><?php echo htmlspecialchars($user['year_level'] ?? 'N/A'); ?></strong></div>
-                <?php else: ?>
-                    <div class="data-row"><label>Office</label> <strong><?php echo htmlspecialchars($user['office'] ?? 'N/A'); ?></strong></div>
-                <?php endif; ?>
-
-                <div class="data-row"><label>Birthday</label> <strong>March 22, 2026</strong></div> <!-- Sample date from Figma -->
-                <div class="data-row"><label>Contact No.</label> <strong><?php echo htmlspecialchars($user['contact_number'] ?? 'N/A'); ?></strong></div>
-                <div class="data-row"><label>Email</label> <strong><?php echo htmlspecialchars($user['email']); ?></strong></div>
-                
-                <div class="data-row no-border"><label>Affiliations</label></div>
-                <div class="affiliations-display">
-                    <strong><?php echo htmlspecialchars($user['affiliation'] ?? 'No affiliations listed.'); ?></strong>
+                    <div class="data-row">
+                        <label>Contact No.</label> 
+                        <strong><?php echo htmlspecialchars($user['contact_number'] ?? 'N/A'); ?></strong>
+                    </div>
+                    
+                    <div class="data-row"><label>Email</label> <strong><?php echo htmlspecialchars($user['email'] ?? 'N/A'); ?></strong></div>
+                    
+                    <div class="data-row no-border"><label>Affiliations</label></div>
+                    <div class="affiliations-display">
+                        <strong><?php echo htmlspecialchars($user['affiliation'] ?? 'No affiliations listed.'); ?></strong>
+                    </div>
                 </div>
             </div>
 
-<!-- TAB 2: MY FAVORITE PETS -->
-<div id="my-favorites" class="tab-content">
-    <div class="pets-grid">
-        <?php if (empty($favorite_pets)): ?>
-            <p class="no-favs">You haven't favorited any pets yet!</p>
-        <?php else: ?>
-            <?php foreach ($favorite_pets as $pet): ?>
-                <div class="pet-card-mini">
-                    <div class="pet-img-box">
-                        <img src="<?php echo $pet['profile_img']; ?>" alt="Pet">
-                        <div class="heart-badge"><i class="fas fa-heart"></i></div>
-                    </div>
-                    <div class="pet-info-box">
-                        <h3><?php echo htmlspecialchars($pet['name']); ?></h3>
-                        <p><?php echo htmlspecialchars(substr($pet['likes'], 0, 80)) . '...'; ?></p>
-                        <!-- Links to the admin pet profile folder as per your structure -->
-                        <a href="../admin/pet_profile/profile.php?id=<?php echo $pet['id']; ?>" class="see-more-mini">See More</a>
-                    </div>
+            <div id="my-favorites" class="tab-content">
+                <div class="pets-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; padding: 20px 0;">
+                    <?php if (empty($favorite_pets)): ?>
+                        <p class="no-favs" style="grid-column: 1/-1; text-align: center; color: #888;">You haven't favorited any pets yet!</p>
+                    <?php else: ?>
+                        <?php foreach ($favorite_pets as $pet): ?>
+                            <div class="pet-card-mini" style="background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+                                <div class="pet-img-box" style="position: relative; height: 150px; background: #eee;">
+                                    <img src="<?php echo htmlspecialchars($pet['image_url'] ?? '../resources/pet-placeholder.png'); ?>" alt="Pet" style="width: 100%; height: 100%; object-fit: cover;">
+                                    <div class="heart-badge" style="position: absolute; top: 10px; right: 10px; color: #FF8BA7;"><i class="fas fa-heart"></i></div>
+                                </div>
+                                <div class="pet-info-box" style="padding: 15px;">
+                                    <h3 style="margin: 0 0 5px; font-size: 1.1rem; color: #333;"><?php echo htmlspecialchars($pet['name'] ?? 'Unnamed'); ?></h3>
+                                    <p style="font-size: 0.85rem; color: #666; margin: 0 0 10px;">Status: <?php echo htmlspecialchars($pet['health_status'] ?? 'Healthy'); ?></p>
+                                    <a href="../admin/pet_profile/profile.php?id=<?php echo htmlspecialchars($pet['pet_id'] ?? ''); ?>" class="see-more-mini" style="color: #9396E6; font-weight: 600; text-decoration: none; font-size: 0.85rem;">See More</a>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
                 </div>
-            <?php endforeach; ?>
-        <?php endif; ?>
-    </div>
-</div>
+            </div>
 
-            
-
-            <!-- EDIT MODE: FORM (Hidden by Default) -->
             <form id="edit-content" class="data-card" style="display:none;" method="POST" action="update_user.php">
-                <div class="data-row"><i class="fas fa-pencil-alt edit-label-icon"></i><label>Full Name</label> <input type="text" name="full_name" value="<?php echo htmlspecialchars($user['first_name'] . ' ' . $user['last_name']); ?>"></div>
-                <div class="data-row"><i class="fas fa-pencil-alt edit-label-icon"></i><label>ID No.</label> <input type="text" name="id_no" value="<?php echo htmlspecialchars($user['student_number'] ?? ''); ?>"></div>
-                <div class="data-row"><i class="fas fa-pencil-alt edit-label-icon"></i><label>Program</label> <input type="text" name="program" value="<?php echo htmlspecialchars($user['program'] ?? ''); ?>"></div>
-                <div class="data-row"><i class="fas fa-pencil-alt edit-label-icon"></i><label>Year Level</label> <input type="text" name="year" value="<?php echo htmlspecialchars($user['year_level'] ?? ''); ?>"></div>
-                <div class="data-row"><i class="fas fa-pencil-alt edit-label-icon"></i><label>Birthday</label> <input type="text" name="bday" value="March 22, 2026"></div>
+                <div class="data-row"><i class="fas fa-pencil-alt edit-label-icon"></i><label>First Name</label> <input type="text" name="first_name" value="<?php echo htmlspecialchars($user['first_name'] ?? ''); ?>"></div>
+                <div class="data-row"><i class="fas fa-pencil-alt edit-label-icon"></i><label>Last Name</label> <input type="text" name="last_name" value="<?php echo htmlspecialchars($user['last_name'] ?? ''); ?>"></div>
                 <div class="data-row"><i class="fas fa-pencil-alt edit-label-icon"></i><label>Contact No.</label> <input type="text" name="contact" value="<?php echo htmlspecialchars($user['contact_number'] ?? ''); ?>"></div>
-                <div class="data-row"><i class="fas fa-pencil-alt edit-label-icon"></i><label>Email</label> <input type="text" name="email" value="<?php echo htmlspecialchars($user['email']); ?>"></div>
+                <div class="data-row"><i class="fas fa-pencil-alt edit-label-icon"></i><label>Email</label> <input type="text" name="email" value="<?php echo htmlspecialchars($user['email'] ?? ''); ?>"></div>
                 
                 <div class="data-row no-border"><i class="fas fa-pencil-alt edit-label-icon"></i><label>Affiliations</label></div>
-                <textarea name="affiliations" class="edit-textarea"><?php echo htmlspecialchars($user['affiliation'] ?? ''); ?></textarea>
+                <textarea name="affiliations" class="edit-textarea" style="width: 100%; min-height: 80px; border-radius: 8px; border: 1px solid #ddd; padding: 10px; font-family: inherit;"><?php echo htmlspecialchars($user['affiliation'] ?? ''); ?></textarea>
 
-                <div class="edit-actions">
-                    <button type="button" class="btn-cancel" id="cancelBtn">Cancel</button>
-                    <button type="submit" class="btn-save">Save</button>
+                <div class="edit-actions" style="margin-top: 20px; display: flex; gap: 10px; justify-content: flex-end;">
+                    <button type="button" class="btn-cancel" id="cancelBtn" style="padding: 8px 20px; border-radius: 20px; border: 1px solid #ccc; background: white; cursor: pointer;">Cancel</button>
+                    <button type="submit" class="btn-save" style="padding: 8px 20px; border-radius: 20px; border: none; background: #9396E6; color: white; cursor: pointer; font-weight: 600;">Save</button>
                 </div>
             </form>
 
@@ -195,36 +166,48 @@ if (!empty($fav_results)) {
         const viewContent = document.getElementById('view-content');
         const editContent = document.getElementById('edit-content');
 
-        editTrigger.onclick = () => {
-            viewContent.style.display = 'none';
-            editContent.style.display = 'block';
-            editTrigger.parentElement.style.visibility = 'hidden'; // Hide the pills row while editing
-        };
+        if(editTrigger) {
+            editTrigger.onclick = () => {
+                viewContent.style.display = 'none';
+                editContent.style.display = 'block';
+                editTrigger.style.visibility = 'hidden'; 
+            };
+        }
 
-        cancelBtn.onclick = () => {
-            viewContent.style.display = 'block';
-            editContent.style.display = 'none';
-            editTrigger.parentElement.style.visibility = 'visible';
-        };
+        if(cancelBtn) {
+            cancelBtn.onclick = () => {
+                viewContent.style.display = 'block';
+                editContent.style.display = 'none';
+                editTrigger.style.visibility = 'visible';
+            };
+        }
 
         function openTab(evt, tabName) {
-    // Hide all tab contents
-    const tabContents = document.getElementsByClassName("tab-content");
-    for (let i = 0; i < tabContents.length; i++) {
-        tabContents[i].classList.remove("active");
-    }
+            const tabContents = document.getElementsByClassName("tab-content");
+            for (let i = 0; i < tabContents.length; i++) {
+                tabContents[i].classList.remove("active");
+                if(tabContents[i].id !== 'all-about-me') {
+                     tabContents[i].style.display = "none";
+                }
+            }
 
-    // Deactivate all tab links
-    const tabLinks = document.getElementsByClassName("tab-link");
-    for (let i = 0; i < tabLinks.length; i++) {
-        tabLinks[i].classList.remove("active");
-    }
+            const tabLinks = document.getElementsByClassName("tab-link");
+            for (let i = 0; i < tabLinks.length; i++) {
+                tabLinks[i].classList.remove("active");
+            }
 
-    // Show the current tab, and add an "active" class to the button that opened the tab
-    document.getElementById(tabName).classList.add("active");
-    evt.currentTarget.classList.add("active");
-}
-
+            const targets = document.getElementById(tabName);
+            if(tabName === 'all-about-me') {
+                document.getElementById('all-about-me').classList.add("active");
+                viewContent.style.display = 'block';
+                editContent.style.display = 'none';
+                if(editTrigger) editTrigger.style.visibility = 'visible';
+            } else {
+                targets.style.display = "block";
+                targets.classList.add("active");
+            }
+            evt.currentTarget.classList.add("active");
+        }
     </script>
 </body>
 </html>
