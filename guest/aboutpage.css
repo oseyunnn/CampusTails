@@ -1,182 +1,80 @@
-/* --- ABOUT HERO --- */
-.about-hero {
-    background-color: var(--stat-lavender); /* Match the lavender border in screenshot */
-    padding: 20px 40px;
+:root {
+    --primary-purple: #7B61FF;
+    --dark-purple: #6D59A4; 
+    --stat-blue: #9396e6;
+    --stat-lavender: #bd97e1;
+    --soft-pink: #fdefff;
+    --light-lavender: #E1D5F5;
 }
 
-.hero-image-container {
-    position: relative;
-    width: 100%;
-    height: 550px;
-    border-radius: 10px;
-    overflow: hidden;
+/* RESET */
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Fredoka', sans-serif; }
+body { background: white; overflow-x: hidden; color: #333; }
+
+/* NAVBAR (Matches Home Exactly) */
+.landing-header { padding: 30px 5%; position: absolute; width: 100%; z-index: 1000; }
+.nav-container { 
+    border-radius: 100px; display: flex; justify-content: space-between; align-items: center; 
+    padding: 10px 45px; background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(15px);
+    border: 1px solid rgba(255,255,255,0.3);
 }
+.logo img { height: 45px; cursor: pointer; transition: 0.3s; }
+.logo img:hover { transform: scale(1.1); }
+.main-nav a { text-decoration: none; color: white; font-weight: 700; margin-left: 30px; transition: 0.3s; }
+.main-nav a.active { border-bottom: 3px solid white; }
 
-.hero-bg {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    filter: brightness(0.9);
+/* HERO - Large Spacing Inside Lavender Frame */
+.about-hero { background-color: var(--stat-lavender); padding: 140px 5% 80px; text-align: center; }
+.hero-frame { position: relative; width: 100%; height: 500px; border-radius: 40px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.1); }
+.hero-bg { width: 100%; height: 100%; object-fit: cover; }
+.hero-overlay { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: white; width: 100%; }
+.small-label { font-size: 3.5rem; font-weight: 700; display: block; margin-bottom: -15px; }
+.main-title { font-size: 8.5rem; font-weight: 700; line-height: 0.85; letter-spacing: -3px; }
+
+/* MISSION & VISION - Generous Breathable White Space */
+.content-wrapper { max-width: 1200px; margin: 0 auto; padding: 100px 20px; }
+.mv-row { display: flex; align-items: center; gap: 80px; margin-bottom: 120px; }
+.mv-row.reverse { flex-direction: row-reverse; }
+.mv-text { flex: 1; }
+.tag { font-size: 1.5rem; color: #888; display: block; margin-bottom: 10px; }
+.mv-title { font-size: 5.5rem; color: var(--primary-purple); line-height: 1; margin-bottom: 25px; }
+.mv-text p { font-size: 1.2rem; line-height: 1.6; color: #555; }
+.mv-img { flex: 1; height: 380px; }
+.mv-img img { width: 100%; height: 100%; object-fit: cover; border-radius: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); }
+
+/* CREW SECTION - Professional Grid with soft pink bg */
+.crew-section { background-color: var(--soft-pink); padding: 100px 8%; }
+.section-header { margin-bottom: 50px; }
+.section-header p { font-size: 1.6rem; color: #555; }
+.purple-main-title { font-size: 6rem; color: var(--primary-purple); font-weight: 700; line-height: 1; }
+
+.crew-grid { 
+    display: grid; grid-template-columns: repeat(2, 1fr); gap: 30px; 
+    grid-auto-rows: 1fr; /* Ensures uniform height */
 }
-
-.hero-overlay-text {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    text-align: center;
-    color: white;
-    width: 100%;
+.crew-card { 
+    background: rgba(255, 255, 255, 0.5); padding: 45px; border-radius: 40px; 
+    text-align: center; border: 1px solid rgba(0,0,0,0.05); transition: 0.3s;
+    display: flex; flex-direction: column; justify-content: center;
 }
+.crew-card:hover { background: white; transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0,0,0,0.04); }
+.crew-card h3 { font-size: 2.2rem; color: #111; margin-bottom: 5px; }
+.since { font-size: 1rem; color: #888; margin-bottom: 20px; display: block; }
+.crew-card p { font-size: 1.1rem; line-height: 1.5; color: #444; font-style: italic; }
 
-.hero-overlay-text .small-label {
-    font-size: 3rem;
-    font-weight: 700;
-    display: block;
-    margin-bottom: -20px;
-    text-shadow: 0 4px 10px rgba(0,0,0,0.3);
-}
+/* FOOTER (Copied exact colors/spacing from Home) */
+.uniform-footer { background: #9396e6; padding: 40px 5% 0; }
+.footer-wrap { display: flex; justify-content: center; align-items: flex-end; gap: 80px; }
+.footer-img-container { line-height: 0; margin-bottom: -1px; }
+.footer-crew { width: 500px; display: block; filter: drop-shadow(0 15px 30px rgba(0,0,0,0.15)); }
+.footer-text-side { color: white; padding-bottom: 80px; }
+.footer-text-side h2 { font-size: 6.5rem; line-height: 0.85; font-weight: 700; margin-bottom: 25px; }
+.footer-text-side p { font-size: 1.5rem; margin-bottom: 20px; font-weight: 600; }
+.social-icons { font-size: 3.5rem; display: flex; gap: 25px; margin-top: 20px; }
 
-.hero-overlay-text .main-title {
-    font-size: 9rem;
-    font-weight: 700;
-    letter-spacing: -2px;
-    text-shadow: 0 10px 30px rgba(0,0,0,0.4);
-}
-
-/* --- MISSION & VISION --- */
-.mission-vision {
-    padding: 100px 10%;
-    background: white;
-}
-
-.mv-row {
-    display: flex;
-    align-items: center;
-    gap: 80px;
-    margin-bottom: 80px;
-}
-
-.mv-row.reverse {
-    flex-direction: row-reverse;
-}
-
-.mv-text {
-    flex: 1;
-}
-
-.mv-text .label {
-    font-size: 1.5rem;
-    color: #444;
-    display: block;
-}
-
-.mv-text .purple-title {
-    font-size: 5rem;
-    color: var(--primary-purple);
-    line-height: 1;
-    margin-bottom: 20px;
-}
-
-.mv-text p {
-    font-size: 1.1rem;
-    line-height: 1.6;
-    color: #555;
-    max-width: 500px;
-}
-
-.mv-image {
-    flex: 1.2;
-}
-
-.mv-image img {
-    width: 100%;
-    border-radius: 20px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-}
-
-/* --- CAMPUS CREW SECTION --- */
-.crew-section {
-    background-color: var(--bg-tools); /* The soft pink from your root */
-    padding: 80px 8%;
-}
-
-.section-intro {
-    text-align: left;
-    margin-bottom: 40px;
-}
-
-.section-intro p { font-size: 1.5rem; color: #444; }
-.crew-title-main { 
-    font-size: 5rem; 
-    color: var(--primary-purple); 
-    line-height: 1;
-    text-shadow: 2px 2px 0 rgba(123, 97, 255, 0.2);
-}
-
-.crew-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 30px;
-}
-
-.crew-card {
-    background: #eeeeee80; /* Transparent light gray */
-    padding: 40px;
-    border-radius: 40px;
-    text-align: center;
-    transition: 0.3s ease;
-}
-
-.crew-card:hover {
-    background: white;
-    transform: translateY(-5px);
-}
-
-.crew-card h3 { font-size: 2rem; margin-bottom: 5px; color: #111; }
-.crew-card .since { 
-    display: block; 
-    color: #666; 
-    font-size: 0.9rem; 
-    margin-bottom: 20px; 
-}
-.crew-card p { font-size: 1rem; color: #444; line-height: 1.5; }
-
-/* --- CTA FOOTER --- */
-.join-crew-cta {
-    background: linear-gradient(to bottom, var(--bg-tools) 50%, var(--stat-blue) 50%);
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
-    padding: 0 10%;
-    position: relative;
-    overflow: hidden;
-}
-
-.cta-image { width: 45%; }
-.cta-image img { width: 100%; display: block; filter: drop-shadow(0 0 10px rgba(0,0,0,0.1)); }
-
-.cta-content {
-    width: 50%;
-    padding-bottom: 80px;
-    color: white;
-}
-
-.cta-content h2 { font-size: 5rem; line-height: 0.9; margin-bottom: 10px; }
-.cta-content p { font-size: 1.3rem; margin-bottom: 25px; font-weight: 500; }
-
-.socials { display: flex; gap: 20px; font-size: 2.5rem; }
-
-/* --- RESPONSIVE --- */
 @media (max-width: 1100px) {
-    .mv-row, .mv-row.reverse { flex-direction: column; gap: 40px; text-align: center; }
-    .mv-text p { margin: 0 auto; }
-    .hero-overlay-text .main-title { font-size: 5rem; }
-}
-
-@media (max-width: 800px) {
+    .mv-row { flex-direction: column; text-align: center; }
     .crew-grid { grid-template-columns: 1fr; }
-    .join-crew-cta { flex-direction: column; align-items: center; text-align: center; }
-    .cta-content { width: 100%; padding-top: 40px; }
-    .socials { justify-content: center; }
+    .main-title { font-size: 5rem; }
+    .footer-wrap { flex-direction: column; align-items: center; text-align: center; }
 }
