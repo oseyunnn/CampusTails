@@ -1,223 +1,275 @@
-# 🐾 CampusTails – Campus Pet Monitoring System
+# 🐾 CampusTails
 
-## 📌 Overview
-CampusTails is a role-based Campus Pet Monitoring System designed to track, manage, and monitor pets within a campus environment. It provides a centralized platform for viewing pet information, maintaining health records, and managing user activity through an audit logging system.
-
-The system supports both monitoring and engagement features, allowing students to interact with campus pets while administrators maintain system control.
+> **Campus Pet Monitoring, Adoption & Welfare System**
+> A role-based platform for managing campus animals, health records, and adoption workflows with full transparency and audit control.
 
 ---
 
-## 🎯 Objectives
-- Track and manage campus pets efficiently  
-- Maintain complete vaccination and health records  
-- Provide role-based access control  
-- Enable administrators to manage users and monitor system activity  
-- Allow students to engage through adoption, donations, and favorites  
-- Ensure transparency through activity logging (audit trail)  
+## ⚡ Status
+
+![Status](https://img.shields.io/badge/status-active%20development-00c853?style=for-the-badge)
+![Type](https://img.shields.io/badge/type-capstone%20project-7e57c2?style=for-the-badge)
+![Architecture](https://img.shields.io/badge/architecture-rbac-red?style=for-the-badge)
+![Stack](https://img.shields.io/badge/stack-php%20%7C%20supabase%20%7C%20mysql-2962ff?style=for-the-badge)
 
 ---
 
-## 👥 User Roles
+## ✨ What is CampusTails?
+
+CampusTails is a **structured campus ecosystem for animal welfare management**.
+
+It enables:
+
+- Tracking campus animals in real time  
+- Managing vaccination and medical records  
+- Handling adoption workflows securely  
+- Enabling donations and engagement  
+- Enforcing role-based access control (RBAC)  
+- Maintaining full system audit logs  
+
+> Built for **transparency, control, and campus-wide animal welfare coordination**.
+
+---
+
+## 🧭 System Design Philosophy
+
+> “Every action is traceable. Every role is intentional.”
+
+CampusTails follows a strict **hierarchical RBAC model**:
+Superadmin → Admin → Student → Guest
+- Higher roles manage lower roles  
+- Every transaction is logged  
+- Sensitive operations are restricted by design  
+
+---
+
+## 🧱 Tech Stack
+
+### Backend
+- PHP (core application logic)
+- Supabase (backend services)
+- MySQL / PostgreSQL (relational database)
+
+### Frontend
+- HTML5
+- CSS3
+- JavaScript
+
+### Architecture
+- Role-Based Access Control (RBAC)
+- UUID-based relational schema
+- Audit logging system
+- Modular feature design
+
+---
+
+## 👥 Roles & Permissions
+
+### 🛡️ Superadmin
+Full system authority.
+
+- Manage all admins
+- Generate admin access codes
+- View system-wide logs
+- Override system permissions
+- Full database visibility
+
+---
+
+### 🛠️ Admin
+Operational system manager.
+
+- Manage pets (CRUD)
+- Manage users
+- Approve adoption requests
+- Track donations
+- Monitor vaccination records
+- Access activity logs
+
+---
+
+### 🎓 Student / User
+Active system participant.
+
+- View pets
+- Favorite animals
+- Submit adoption requests
+- Make donations
+- View personal activity history
+
+---
 
 ### 👤 Guest
-- View pet listings and basic profiles  
-- Limited access to system features  
-- Cannot create accounts or interact with pets  
+Public viewer.
+
+- Browse pet listings only
+- No interaction privileges
 
 ---
 
-### 🎓 Student
-- Create and manage their own accounts  
-- View full pet profiles and health records  
-- Favorite pets  
-- Donate to support pets  
-- Apply for pet adoption *(exclusive to students)*  
-- Access personal profile  
+## 🐕 Core Product Modules
+
+### Pet Intelligence System
+Manage complete pet profiles:
+
+- Identity (name, species)
+- Location found
+- Image records
+- Adoption status
 
 ---
 
-### 🛠️ Administrator
-- Full system access  
-- Manage pets (Create, Read, Update, Delete)  
-- Manage users (Student/Admin roles)  
-- View and monitor activity logs  
+### 💉 Health & Vaccination Engine
+Structured medical tracking:
+
+- Vaccination history
+- Veterinary records
+- Medication logs
+- Next due schedules
 
 ---
 
-## 🧩 Core Features
-
-### 🐕 Pet Management
-- Add, update, and delete pet profiles (Admin only)  
-- View pet details:
-  - Name  
-  - Species  
-  - Description  
-  - Date Found  
-  - Health Status  
-  - Location Found  
+### ❤️ Adoption Workflow Engine
+End-to-end adoption pipeline:
+Request → Review → Approval / Rejection
+- Student application system
+- Admin review panel
+- Status tracking system
 
 ---
 
-### 💉 Health Records
-- Track vaccination history  
-- Maintain:
-  - Last Vaccine Date  
-  - Next Due Date  
-  - Veterinarian Information  
-- Displays full vaccination timeline  
+### 💰 Donation System
+Support-based contribution system:
+
+- Monetary donations
+- In-kind support
+- Optional pet targeting
+- User-linked tracking
 
 ---
 
-### ❤️ Student Interaction Features
-- **Favorites**: Save preferred pets  
-- **Donations**: Support pet care efforts  
-- **Adoption Requests**: Apply to adopt pets *(students only)*  
+### ⭐ Engagement Layer
+User interaction system:
+
+- Favorites list
+- Personal tracking
+- Engagement history
 
 ---
 
-### 👥 User Management (Admin Only)
-- View all users in a list or table  
-- Assign roles (Student/Admin)  
-- Reset passwords  
-- Delete users  
-- Create new accounts if needed  
+### 📊 Audit Logging System
+System-wide transparency layer:
+
+- User actions
+- Admin operations
+- CRUD tracking
+- Timestamped logs
 
 ---
 
-### 📋 Activity Logs (Admin Only)
-- Tracks system changes  
-- Records:
-  - User (who performed action)  
-  - Action (CREATE, UPDATE, DELETE)  
-  - Target (affected pet)  
-  - Timestamp  
+## 🔐 Security Model
+
+- Password hashing (bcrypt)
+- Session-based authentication
+- Role-based access control (RBAC)
+- Admin code verification system
+- Immutable activity logging
 
 ---
 
-### 📊 Dashboard ("PawCenterbase")
-Displays system statistics:
-- Registered Pets  
-- Vaccinated Pets  
-- Pets Under Observation  
-- Activity Logs count  
+## 📊 System Dashboards
 
-Admin tools include:
-- Add Pet  
-- Vaccination Records  
-- User Management  
-- Activity Logs  
+### 🛡️ Superadmin Console
+- System-wide analytics
+- Admin management
+- Access code generation
+- Full audit logs
 
 ---
 
-## 🧭 Navigation Structure
-
-### Guest
-Home | Pets | Login  
-
-### Student
-Home | Pets | Favorites | Profile | Logout  
-
-### Admin
-Home | Pets | Users | Activity Logs | Profile | Logout  
+### 🛠️ Admin Console
+- Pet statistics
+- Adoption pipeline
+- Donation tracking
+- Vaccination monitoring
+- Activity logs
 
 ---
 
-## 🖥️ System Pages
-- Landing Page  
-- Dashboard (Admin Only)  
-- Pet Gallery  
-- Pet Profile & Health Records  
-- Favorites (Student)  
-- Adoption Requests (Student)  
-- User Management (Admin)  
-- Activity Log (Admin)  
+## 🗄️ Data Model Overview
+
+**Core Entities**
+
+- Users (`paw_users`)
+- Pets
+- Adoption Requests
+- Donations
+- Vaccination Records
+- Medical History
+- Activity Logs
+- Admin Codes
 
 ---
 
-## 🔐 Access Control
-- Guests: View-only access with limitations  
-- Students: Interactive access (favorites, donations, adoption)  
-- Admins: Full CRUD functionality and system control  
+## 🧭 Product Flow
+Guest
+↓
+Browse Pets
+↓
+Student Account
+↓
+Adopt / Donate / Favorite
+↓
+Admin Review
+↓
+System Logging
+↓
+Superadmin Oversight
 
 ---
 
-## 🎨 UI/UX Design Principles
-- Role-based visibility of components  
-- Clean and professional layout  
-- Consistent purple/lavender theme  
-- Structured layouts (tables, dashboards, cards)  
+## 🎨 UI Philosophy
+
+- Role-based UI rendering
+- Clean admin-first dashboard design
+- Soft academic color system (lavender/purple base)
+- Card-driven layouts
+- Minimal cognitive load interface
 
 ---
 
-## 🗂️ Data Entities
+## 🚀 Roadmap
 
-### 🐕 Pet
-- Name  
-- Species  
-- Description  
-- Date Found  
-- Health Status  
-- Location Found  
-
-### 👤 User
-- Name  
-- Email  
-- Role (Student/Admin)  
-
-### 📋 Activity Log
-- User  
-- Action  
-- Target Pet  
-- Timestamp  
+- Email notifications for adoption updates
+- SMS vaccination reminders
+- Advanced analytics dashboard
+- QR-based pet identity system
+- Mobile-first redesign
+- Veterinary API integration
 
 ---
 
-## ⚙️ System Requirements
+## 👨‍💻 Team
 
-### Functional Requirements
-- Role-based authentication  
-- Pet CRUD operations  
-- User account creation (Students & Admins)  
-- Favorites, donation, and adoption system  
-- Activity logging system  
-- Vaccination record tracking  
-
-### Non-Functional Requirements
-- Responsive UI  
-- Secure access control  
-- Scalable database structure  
-- Intuitive interface  
+- Angela Jahziel B. Encabo  
+- Jhen Niña Grace Aloyon  
 
 ---
 
-## 🚀 Future Improvements
-- Vaccination reminders and notifications  
-- Search and filter functionality  
-- Improved mobile responsiveness  
-- Analytics dashboard  
-- Integration with veterinary services  
+## 🎓 Academic Context
 
----
-
-## 📣 Notes
-- Students can create accounts and interact with pets  
-- Adoption feature is exclusive to students  
-- Guests are limited to viewing only  
-- System balances monitoring and student engagement  
-
----
-
-## 👨‍💻 Developers
-This system was developed by:
-- **Angela Jahziel B. Encabo**
-- **Jhen Niña Grace Aloyon**
-
----
-
-## 🎓 Academic Submission
-This project is submitted as part of the requirements for the **Information Management 1 Capstone Project**.
+**Information Management 1 — Capstone Project**
 
 ---
 
 ## 📄 License
-This project is for academic purposes only.
+
+Academic use only. Not intended for commercial deployment.
+
+---
+
+## 🐾 Closing Statement
+
+> “Technology that connects people, systems, and animal welfare — responsibly.”
+
+---
