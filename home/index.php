@@ -30,7 +30,7 @@ if (is_array($vaccine_data) && !empty($vaccine_data)) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CampusTails | Be a Hero</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css?v=1.0">
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
@@ -42,9 +42,9 @@ if (is_array($vaccine_data) && !empty($vaccine_data)) {
                 <img src="../resources/logo-white.png" alt="CampusTails">
             </div>
             <nav class="main-nav">
-                <a href="#" class="active">home</a>
-                <a href="#">about</a>
-                <a href="../guest/pets.php">pets</a>
+                <a href="../home/index.php" class="active">home</a>
+                <a href="../guest/aboutpage.php">about</a>
+                <a href="../pets_directory/pets.php">pets</a>
                 <a href="../login/index.php">login</a>
             </nav>
         </div>
@@ -118,11 +118,11 @@ if (is_array($vaccine_data) && !empty($vaccine_data)) {
                     <p>It's heart-warming to see our campus becoming a second home for these stray paws. Small acts of kindness truly make a huge difference!</p>
                 </div>
                 <div class="wall-post">
-                    <h4>OUR SHARED SPACE</h4>
+                    <h4>THE MISSION WE SHARE</h4>
                     <p>I love how everyone comes together to feed and care for the pets. CampusTails has really helped us organize our efforts better.</p>
                 </div>
                 <div class="wall-post">
-                    <h4>OUR SHARED SPACE</h4>
+                    <h4>RAY OF SUNSHINE</h4>
                     <p>Seeing the cats lounging by the fountain always brightens my stress morning. I'm so glad we have a community that protects them.</p>
                 </div>
             </div>
