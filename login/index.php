@@ -20,10 +20,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         
         // Verifying the hashed password safely against database column 'password_hash'
         if (password_verify($password, $user['password_hash'])) {
-            $_SESSION['user_id'] = $user['user_id'];
-            $_SESSION['role'] = $user['role'];
-            
-            if ($user['account_type'] === 'admin') {
+          $_SESSION['user_id'] = $user['user_id'];
+            $_SESSION['role'] = $user['account_type']; // or $user['role'] depending on your DB column
+
+            // Redirect based on account type
+            if ($user['account_type'] === 'superadmin') {
+                header("Location: ../superadmin/dashboard.php");
+            } elseif ($user['account_type'] === 'admin') {
                 header("Location: ../admin/dashboard.php");
             } else {
                 header("Location: ../user/index.php");
