@@ -15,72 +15,84 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     } else {
         $password = password_hash($password_raw, PASSWORD_DEFAULT);
 
-        // 2. Check PawCrewCode (Admin Verification)
+        // 2. Check PawCrewCode (Admin Verification) - UPDATED
         $account_type = 'user';
+        $code_id_to_deactivate = null; // Variable to hold the ID for later
+
         if (!empty($_POST['crew_code'])) {
-            $codeCheck = supabase_query("admin_codes?admin_code=eq." . urlencode($_POST['crew_code']), "GET");
-            if (!empty($codeCheck)) { 
+            // We check specifically for active codes only
+            $codeCheck = supabase_query("admin_codes?admin_code=eq." . urlencode($_POST['crew_code']) . "&is_active=eq.true", "GET");
+            
+            if (!empty($codeCheck) && isset($codeCheck[0]['code_id'])) { 
                 $account_type = 'admin'; 
+                $code_id_to_deactivate = $codeCheck[0]['code_id']; // Capture the ID
+            } else {
+                // Optional: Stop registration if the code is invalid/used
+                $error = "The PawCrewCode entered is either invalid or has already been used.";
             }
         }
 
-        // 3. Prepare User Data
-        $userData = [
-            "first_name"     => $_POST['first_name'],
-            "last_name"      => $_POST['last_name'],
-            "username"       => $username,
-            "email"          => $_POST['email'],
-            "password_hash"  => $password,
-            "contact_number" => $_POST['contact'],
-            "affiliation"    => $_POST['affiliations'],
-            "role"           => $role,
-            "account_type"   => $account_type
-        ];
+        // Only proceed if there is no error from the code check
+        if (empty($error)) {
+            // 3. Prepare User Data
+            $userData = [
+                "first_name"     => $_POST['first_name'],
+                "last_name"      => $_POST['last_name'],
+                "username"       => $username,
+                "email"          => $_POST['email'],
+                "password_hash"  => $password,
+                "contact_number" => $_POST['contact'],
+                "affiliation"    => $_POST['affiliations'],
+                "role"           => $role,
+                "account_type"   => $account_type
+            ];
 
-        // 4. Attempt Insert
-        $userResponse = supabase_query("paw_users", "POST", $userData);
+            // 4. Attempt Insert
+            $userResponse = supabase_query("paw_users", "POST", $userData);
 
-        // Check for unique constraint violations or errors
-        if (isset($userResponse['code'])) {
-            if ($userResponse['code'] === '23505') {
-                if (strpos($userResponse['message'], 'username') !== false) {
-                    $error = "The username '" . $username . "' is already taken. Please choose another one.";
+            if (isset($userResponse['code'])) {
+                if ($userResponse['code'] === '23505') {
+                    $error = (strpos($userResponse['message'], 'username') !== false) 
+                             ? "The username '" . $username . "' is already taken." 
+                             : "This email address is already registered.";
                 } else {
-                    $error = "This email address is already registered to an account.";
+                    $error = "Database Error: " . $userResponse['message'];
                 }
-            } else {
-                $error = "Database Error: " . $userResponse['message'];
-            }
-        } 
-        // 5. If Success, Insert Into Specific Profile Type
-        else if (!empty($userResponse) && isset($userResponse[0]['user_id'])) {
-            $new_uuid = $userResponse[0]['user_id'];
-            
-            if ($role === 'student') {
-                $profileData = [
-                    "user_id"        => $new_uuid, 
-                    "student_number" => $_POST['id_number'], 
-                    "program"        => $_POST['program'], 
-                    "year_level"     => $_POST['year_level']
-                ];
-                supabase_query("student_profiles", "POST", $profileData);
-            } else if ($role === 'faculty') {
-                $profileData = [
-                    "user_id"             => $new_uuid, 
-                    "office"              => $_POST['office'], 
-                    "institutional_email" => $_POST['email']
-                ];
-                supabase_query("faculty_profiles", "POST", $profileData);
-            }
+            } 
+            // 5. Success Block - UPDATED
+            else if (!empty($userResponse) && isset($userResponse[0]['user_id'])) {
+                $new_uuid = $userResponse[0]['user_id'];
+                
+                // Insert Profiles
+                if ($role === 'student') {
+                    $profileData = ["user_id" => $new_uuid, "student_number" => $_POST['id_number'], "program" => $_POST['program'], "year_level" => $_POST['year_level']];
+                    supabase_query("student_profiles", "POST", $profileData);
+                } else if ($role === 'faculty') {
+                    $profileData = ["user_id" => $new_uuid, "office" => $_POST['office'], "institutional_email" => $_POST['email']];
+                    supabase_query("faculty_profiles", "POST", $profileData);
+                }
 
-            // Success Pop-up and Redirect
-            echo "<script>
-                    alert('Sign up successful! You can now log in.');
-                    window.location.href = '../login/index.php';
-                  </script>";
-            exit();
-        } else {
-            $error = "Registration failed due to an unexpected response configuration format.";
+                // --- NEW DEACTIVATION LOGIC ---
+                // If a code was used, we deactivate it now
+                if ($code_id_to_deactivate) {
+                    supabase_query("admin_codes?code_id=eq." . $code_id_to_deactivate, "PATCH", ["is_active" => false]);
+                    
+                    // Log the event in activity logs
+                    $logData = [
+                        "user_id" => $new_uuid,
+                        "action" => "Account created using Admin Code. Privileges elevated to Admin."
+                    ];
+                    supabase_query("activity_logs", "POST", $logData);
+                }
+
+                echo "<script>
+                        alert('Sign up successful! You can now log in.');
+                        window.location.href = '../login/index.php';
+                      </script>";
+                exit();
+            } else {
+                $error = "Registration failed due to an unexpected configuration.";
+            }
         }
     }
 }
@@ -120,15 +132,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <label>First Name <span class="req">*</span></label>
                         <input type="text" name="first_name" required>
                     </div>
+                       <div class="input-group">
+                        <label>M.I. <span class="req">*</span></label>
+                        <input type="text" name="mi" maxlength="2" required>
+                    </div>
                     <div class="input-group">
                         <label>Last Name <span class="req">*</span></label>
                         <input type="text" name="last_name" required>
                     </div>
-                    <div class="input-group">
-                        <label>M.I. <span class="req">*</span></label>
-                        <input type="text" name="mi" maxlength="2" required>
-                    </div>
-
+                 
                     <div class="input-group span-2">
                         <label>ID Number <span class="req">*</span></label>
                         <input type="text" name="id_number" required>
