@@ -1,0 +1,204 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+:root {
+    --primary-purple: #7B61BA;
+    --periwinkle: #97A2E8;
+    --lavender: #C5A3E8;
+    --soft-pink: #F0A6B1;
+    --bg-light: #F6D6F8;
+    --white: #ffffff;
+    --text-dark: #2d3436;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--bg-light);
+    margin: 0;
+    display: flex;
+    color: var(--text-dark);
+}
+
+/* --- Sidebar Styling --- */
+.sidebar {
+    width: 260px;
+    background: var(--white);
+    height: 100vh;
+    position: fixed;
+    box-shadow: 4px 0 15px rgba(123, 97, 186, 0.1);
+    display: flex;
+    flex-direction: column;
+    padding: 30px 20px;
+    z-index: 100;
+}
+
+.logo-container {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.sidebar nav a {
+    display: flex;
+    align-items: center;
+    padding: 14px 20px;
+    color: var(--primary-purple);
+    text-decoration: none;
+    font-weight: 500;
+    border-radius: 12px;
+    margin-bottom: 8px;
+    transition: all 0.3s ease;
+}
+
+.sidebar nav a:hover {
+    background: rgba(123, 97, 186, 0.05);
+    transform: translateX(5px);
+}
+
+.sidebar nav a.active {
+    background: var(--primary-purple);
+    color: var(--white);
+    box-shadow: 0 4px 12px rgba(123, 97, 186, 0.3);
+}
+
+/* --- Main Content Area --- */
+.main-content {
+    margin-left: 300px;
+    padding: 40px;
+    width: calc(100% - 340px);
+}
+
+h1 { color: var(--primary-purple); font-weight: 600; margin-bottom: 30px; }
+
+/* --- Stats Cards --- */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 25px;
+    margin-bottom: 40px;
+}
+
+.stat-card {
+    padding: 30px;
+    border-radius: 20px;
+    text-align: center;
+    color: var(--white);
+    transition: transform 0.3s ease;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+}
+
+.stat-card:hover { transform: translateY(-8px); }
+.stat-card h2 { font-size: 3rem; margin: 0; line-height: 1; }
+.stat-card p { margin: 5px 0 0; text-transform: uppercase; font-size: 0.8rem; font-weight: 600; letter-spacing: 1px; opacity: 0.9; }
+
+/* --- Data Containers (Tables/Forms) --- */
+.glass-panel {
+    background: var(--white);
+    padding: 30px;
+    border-radius: 24px;
+    box-shadow: 0 8px 32px rgba(123, 97, 186, 0.05);
+    margin-bottom: 30px;
+}
+
+table { width: 100%; border-collapse: separate; border-spacing: 0 10px; }
+th { text-align: left; padding: 15px 20px; color: var(--primary-purple); font-weight: 600; background: rgba(246, 214, 248, 0.4); border-radius: 10px; }
+td { padding: 15px 20px; background: var(--white); border-bottom: 1px solid #f1f1f1; }
+
+/* --- Forms & Buttons --- */
+.form-group { margin-bottom: 20px; }
+label { display: block; margin-bottom: 8px; font-weight: 500; color: var(--primary-purple); }
+select, input {
+    width: 100%;
+    padding: 12px 15px;
+    border: 2px solid #eee;
+    border-radius: 12px;
+    font-family: inherit;
+    transition: border 0.3s;
+}
+select:focus { border-color: var(--lavender); outline: none; }
+
+.btn-pretty {
+    background: var(--primary-purple);
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s;
+}
+.btn-pretty:hover { background: var(--lavender); box-shadow: 0 5px 15px rgba(123, 97, 186, 0.3); }
+
+.badge {
+    padding: 5px 12px;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+.badge-purple { background: rgba(123, 97, 186, 0.1); color: var(--primary-purple); }
+
+/* Add these to your existing superadmin.css */
+.badge-student { background: rgba(151, 162, 232, 0.2); color: #5a67d8; } /* Periwinkle */
+.badge-faculty { background: rgba(197, 163, 232, 0.2); color: #805ad5; } /* Lavender */
+.badge-admin { background: rgba(240, 166, 177, 0.2); color: #d53f8c; }   /* Pink */
+.badge-superadmin { background: var(--primary-purple); color: white; }
+
+.user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--bg-light);
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 10px;
+    object-fit: cover;
+}
+
+/* --- PRINT STYLES (PDF EXPORT) --- */
+@media print {
+    /* 1. Hide the sidebar and the export button itself */
+    .sidebar, .btn-pretty, .nav-links, .sidebar-footer {
+        display: none !important;
+    }
+
+    /* 2. Remove the margin from the main content so the table is centered */
+    .main-content {
+        margin-left: 0 !important;
+        padding: 0 !important;
+        width: 100% !important;
+    }
+
+    /* 3. Ensure background colors and design are preserved */
+    body {
+        background-color: white !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+
+    .glass-panel {
+        box-shadow: none !important;
+        border: 1px solid #f1f1f1;
+        width: 100% !important;
+    }
+
+    /* 4. Show the "Print Header" (Logo + Title) which is hidden on the web screen */
+    .print-only-header {
+        display: block !important;
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    /* 5. Clean up the table for paper */
+    th {
+        background-color: #F6D6F8 !important;
+        color: #7B61BA !important;
+    }
+    
+    td {
+        border-bottom: 1px solid #eee !important;
+    }
+}
+
+/* Hide the print header by default on the screen */
+.print-only-header {
+    display: none;
+}
