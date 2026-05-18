@@ -36,7 +36,8 @@ function supabase_query($endpoint, $method = 'GET', $data = null) {
     global $SUPABASE_URL, $SUPABASE_KEY, $SUPABASE_USER_URL, $SUPABASE_USER_KEY;
 
     // Define all target endpoints/tables belonging to your dbUser database
-    $userDbTables = ['paw_users', 'admin_codes', 'student_profiles', 'faculty_profiles', 'activity_logs', 'favorites'];
+    // Note: `activity_logs` should remain on the main DB after merge, so exclude it here
+    $userDbTables = ['paw_users', 'admin_codes', 'student_profiles', 'faculty_profiles', 'favorites'];
     
     // Determine which database credentials to apply
     $useUserDb = false;
