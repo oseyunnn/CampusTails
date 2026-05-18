@@ -2,38 +2,38 @@
 session_start();
 include('../utils/db_config.php');
 
+$error = "";
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $username = $_POST['username'] ?? '';
+    // Trim whitespace to prevent accidental trailing space typos
+    $username = isset($_POST['username']) ? trim($_POST['username']) : '';
     $password = $_POST['password'] ?? '';
 
-    // Fetch user and join profile tables
-    $endpoint = "users?username=eq.$username&select=*,student_profiles(*),faculty_profiles(*)";
+    // STREAMLINED: Query just the core user details first to guarantee a match from paw_users
+    $endpoint = "paw_users?username=eq." . urlencode($username) . "&select=*";
     $result = supabase_query($endpoint);
 
-    if (!empty($result)) {
+    if ($result === null) {
+        $error = "Connection Error: Please check your internet or .env settings.";
+    } elseif (is_array($result) && isset($result[0])) {
         $user = $result[0];
         
-        // Verify Password
+        // Verifying the hashed password safely against database column 'password_hash'
         if (password_verify($password, $user['password_hash'])) {
             $_SESSION['user_id'] = $user['user_id'];
-            $_SESSION['username'] = $user['username'];
             $_SESSION['role'] = $user['role'];
-            $_SESSION['account_type'] = $user['account_type'];
-
-            // Redirect based on account type
-        
-        if ($user['account_type'] === 'admin') {
-    // Go up one, then into admin folder
-             header("Location: ../admin/dashboard.php");
-        } else {
-    // Go up one, then into user_profile folder
-            header("Location: ../user_profile/user_profile.php");
-        }
+            
+            if ($user['account_type'] === 'admin') {
+                header("Location: ../admin/dashboard.php");
+            } else {
+                header("Location: ../user_profile/index.php");
+            }
             exit();
         } else {
             $error = "Incorrect password!";
         }
     } else {
+        // If it falls here, 'paw_users' literally does not contain a row where username = $username
         $error = "User not found!";
     }
 }
@@ -52,7 +52,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <body class="login-page">
 
     <div class="login-master">
-        <!-- HEADER -->
         <header class="login-header">
             <div class="nav-container login-nav-box">
                 <div class="logo-side">
@@ -67,7 +66,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </div>
         </header>
 
-        <!-- CONTENT -->
         <main class="login-split">
             <section class="hero-col">
                 <div class="bubbles-frame">
@@ -81,25 +79,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <img src="../resources/Logo.png" alt="CampusTails">
                         <h3>Welcome Back!</h3>
                     </div>
-
-                    <!-- Inside login/index.php -->
-                    <?php if(isset($_GET['signup']) && $_GET['signup'] == 'success'): ?>
-                    <p style="color: #4CAF50; background: #e8f5e9; padding: 10px; border-radius: 10px; font-size: 0.9rem; font-weight: 600;">
-                     Registration successful! You can now log in.
-                    </p>
-                    <?php endif; ?>
                     
-                    <!-- action="" ensures it posts to the current file -->
                     <form action="" method="POST">
                         <div class="auth-row">
-                            <input type="text" name="username" placeholder="username" required>
+                            <input type="text" name="username" placeholder="username" value="<?php echo isset($username) ? htmlspecialchars($username) : ''; ?>" required>
                         </div>
                         <div class="auth-row pass-wrapper">
                             <input type="password" name="password" id="passInput" placeholder="password" required>
                             <i class="fas fa-eye-slash" id="eyeBtn"></i>
                         </div>
 
-                        <?php if(isset($error) && $error != ""): ?><p class="err-msg" style="color:#FF5252; font-size:0.85rem; margin-bottom:10px;"><?php echo $error; ?></p><?php endif; ?>
+                        <?php if(!empty($error)): ?>
+                            <p class="err-msg" style="color:#FF5252; font-size:0.85rem; margin-bottom:10px; font-weight: 600;">
+                                <?php echo htmlspecialchars($error); ?>
+                            </p>
+                        <?php endif; ?>
 
                         <div class="auth-extras">
                             <label><input type="checkbox"> Remember me</label>
@@ -117,7 +111,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <p>Be a part of our PawCrew!<a href="../register/index.php">Send us an email!</a></p>
         </footer>
 
-        <!-- CHARACTER -->
         <div class="character-anchor">
             <img src="../resources/footer.png" alt="Character">
         </div>
