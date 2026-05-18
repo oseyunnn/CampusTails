@@ -114,7 +114,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </main>
 
         <footer class="login-footer">
-            <p>Do you want to be a part of our PawCrew? <a href="../register/index.php">Send us an email!</a></p>
+            <p>Be a part of our PawCrew!<a href="../register/index.php">Send us an email!</a></p>
         </footer>
 
         <!-- CHARACTER -->

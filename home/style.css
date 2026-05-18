@@ -1,0 +1,115 @@
+:root {
+    --primary-purple: #7B61FF;
+    --dark-purple: #6D59A4; 
+    --stat-blue: #9396e6;
+    --stat-lavender: #bd97e1;
+    --soft-pink: #f1a7b4;
+    --light-lavender: #E1D5F5;
+}
+
+/* --- RESET --- */
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Fredoka', sans-serif; }
+body { background: white; color: var(--dark-purple); overflow-x: hidden; }
+
+/* --- NAVBAR (HOVER ONLY) --- */
+.landing-header { padding: 30px 5%; position: absolute; width: 100%; z-index: 1000; }
+.nav-container { 
+    border-radius: 100px; display: flex; justify-content: space-between; align-items: center; 
+    padding: 10px 45px; background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(15px);
+    border: 1px solid rgba(255,255,255,0.3);
+}
+
+.logo img { 
+    height: 45px; cursor: pointer;
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+}
+.logo img:hover { transform: scale(1.15); }
+
+.main-nav a { 
+    text-decoration: none; color: white; font-weight: 700; margin-left: 30px; 
+    transition: 0.3s ease; display: inline-block;
+}
+.main-nav a:hover { color: var(--light-lavender); transform: translateY(-3px); }
+.main-nav a.active { border-bottom: 3px solid white; }
+
+/* --- HERO --- */
+.hero-section {
+    background-image: url('../resources/gradient.png'); background-size: cover; background-position: center bottom;
+    padding: 160px 5% 0; text-align: center; min-height: 85vh; position: relative;
+}
+.hero-title { font-size: 7.5rem; color: white; line-height: 0.85; font-weight: 700; margin-bottom: 35px; }
+.hero-btn {
+    background: var(--dark-purple); color: white; padding: 15px 55px;
+    border-radius: 20px; text-decoration: none; font-weight: 700; font-size: 1.2rem;
+    transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.hero-btn:hover { transform: scale(1.05); }
+.main-cats { width: 650px; max-width: 90%; display: block; margin: 0 auto; }
+
+/* --- STATS PILLS --- */
+.stats-row { display: flex; justify-content: center; gap: 25px; margin-top: -90px; position: relative; z-index: 20; padding: 0 5%; }
+.stat-pill { border-radius: 35px; flex: 1; max-width: 280px; padding: 50px 20px; text-align: center; color: white; }
+.bg-blue { background: var(--stat-blue); }
+.bg-lavender { background: var(--stat-lavender); }
+.stat-num { font-size: 6rem; font-weight: 700; line-height: 1; }
+.stat-label { font-weight: 700; font-size: 1.1rem; text-transform: uppercase; display: block; margin-top: 10px; }
+
+/* --- BANNER --- */
+.breathable-white-space { height: 100px; }
+.paw-center-banner { background: #9396e6; color: white; text-align: center; padding: 75px 20px; }
+.paw-center-banner h2 { font-size: 5.5rem; font-weight: 700; }
+
+/* --- PET PILL CARDS (RELIABLE GRID) --- */
+.section-container { padding: 100px 5% 50px; text-align: center; }
+.section-main { font-size: 5rem; color: var(--primary-purple); font-weight: 700; margin-bottom: 60px; }
+
+.pets-grid-landing { 
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(500px, 1fr)); 
+    gap: 40px; max-width: 1250px; margin: 0 auto;
+}
+.pet-pill-card { 
+    background-color: var(--dark-purple); border-radius: 120px; 
+    padding: 35px; color: white; 
+    min-height: 250px; /* Flexible but uniform */
+    display: flex; align-items: center;
+    transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.pet-pill-card:hover { transform: scale(1.02); }
+
+.card-inner { display: flex; align-items: center; gap: 35px; width: 100%; }
+.pet-img-squircle { 
+    width: 180px; height: 180px; border-radius: 50px; 
+    background-size: cover; background-position: center; flex-shrink: 0;
+    border: 6px solid rgba(255,255,255,0.15);
+}
+.pet-info { text-align: left; flex: 1; }
+.pet-name { font-size: 4.5rem; font-weight: 700; margin-bottom: 12px; line-height: 1; }
+.pet-desc { font-size: 1.1rem; line-height: 1.4; opacity: 0.95; margin-bottom: 25px; }
+.see-more-pill { background: var(--soft-pink); color: white; border-radius: 30px; padding: 10px 40px; text-decoration: none; font-weight: 700; }
+
+/* --- COMMUNITY WALL (STABLE GRID) --- */
+.community-wall { background: #fdefff; padding: 100px 5%; text-align: center; }
+.wall-grid { 
+    display: grid; 
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
+    gap: 30px; 
+    max-width: 1300px; margin: 0 auto; 
+}
+.wall-post { background: white; padding: 45px; border-radius: 30px; text-align: left; box-shadow: 0 10px 30px rgba(0,0,0,0.03); }
+.wall-post h4 { font-weight: 700; margin-bottom: 15px; font-size: 1.2rem; }
+
+/* --- FOOTER (FLUSH) --- */
+.uniform-footer { background: #9396e6; padding: 40px 5% 0; }
+.footer-wrap { display: flex; justify-content: center; align-items: flex-end; gap: 80px; }
+.footer-img-container { line-height: 0; margin-bottom: -1px; }
+.footer-crew { width: 500px; display: block; filter: drop-shadow(0 15px 30px rgba(0,0,0,0.15)); }
+
+.footer-text-side { color: white; padding-bottom: 50px; }
+.footer-text-side h2 { font-size: 6rem; line-height: 0.85; font-weight: 700; margin-bottom: 25px; }
+.social-icons { font-size: 3.5rem; display: flex; gap: 25px; margin-top: 20px; }
+
+@media (max-width: 1100px) {
+    .hero-title { font-size: 4rem; }
+    .pets-grid-landing { grid-template-columns: 1fr; }
+    .footer-wrap { flex-direction: column; align-items: center; text-align: center; }
+}

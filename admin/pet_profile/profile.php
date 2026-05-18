@@ -136,9 +136,6 @@ $history  = $pet['medical_history'] ?? [];
     <div id="pawModal" class="modal-overlay">
         <div class="modal-card">
             <div class="modal-content-scrollable">
-                <button type="button" class="btn-delete-record" onclick="deletePet()">
-                <i class="fas fa-trash-alt"></i> Delete Pet
-                </button>
                 <h2 class="section-heading" style="margin: 30px 0 20px;">Edit Paw Profile</h2>
                 <form id="fullEditForm" enctype="multipart/form-data">
                     <input type="hidden" name="pet_id" value="<?php echo $pet['id']; ?>">
