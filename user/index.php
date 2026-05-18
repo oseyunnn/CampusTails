@@ -57,7 +57,7 @@ $displayed_favorites = array_slice($favorite_pets, 0, 4); // Limit gallery to a 
                 <nav class="nav-links">
                     <a href="#" class="active">dashboard</a>
                     <a href="#">pets</a>
-                    <a href="../login/login.php"><i class="fas fa-sign-out-alt"></i> logout</a>
+                    <a href="../login/index.php"><i class="fas fa-sign-out-alt"></i> logout</a>
                 </nav>
             </div>
         </header>
