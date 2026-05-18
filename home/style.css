@@ -42,6 +42,8 @@ body { background: white; color: var(--dark-purple); overflow-x: hidden; }
     background: var(--dark-purple); color: white; padding: 15px 55px;
     border-radius: 20px; text-decoration: none; font-weight: 700; font-size: 1.2rem;
     transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+     display: inline-block; 
+    margin-bottom: 80px; 
 }
 .hero-btn:hover { transform: scale(1.05); }
 .main-cats { width: 650px; max-width: 90%; display: block; margin: 0 auto; }
@@ -63,29 +65,91 @@ body { background: white; color: var(--dark-purple); overflow-x: hidden; }
 .section-container { padding: 100px 5% 50px; text-align: center; }
 .section-main { font-size: 5rem; color: var(--primary-purple); font-weight: 700; margin-bottom: 60px; }
 
+/* --- UPDATED PET PILL CARDS --- */
+
 .pets-grid-landing { 
-    display: grid; grid-template-columns: repeat(auto-fit, minmax(500px, 1fr)); 
-    gap: 40px; max-width: 1250px; margin: 0 auto;
+    display: grid; 
+    grid-template-columns: repeat(auto-fit, minmax(500px, 1fr)); 
+    gap: 30px; 
+    max-width: 1250px; 
+    margin: 0 auto;
 }
+
 .pet-pill-card { 
-    background-color: var(--dark-purple); border-radius: 120px; 
-    padding: 35px; color: white; 
-    min-height: 250px; /* Flexible but uniform */
-    display: flex; align-items: center;
+    background-color: var(--dark-purple); 
+    border-radius: 120px; 
+    padding: 30px 50px; 
+    color: white; 
+    /* Fix the height for uniformity */
+    height: 280px; 
+    display: flex; 
+    align-items: center;
     transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-sizing: border-box;
 }
+
 .pet-pill-card:hover { transform: scale(1.02); }
 
-.card-inner { display: flex; align-items: center; gap: 35px; width: 100%; }
+.card-inner { 
+    display: flex; 
+    align-items: center; 
+    gap: 30px; 
+    width: 100%; 
+    height: 100%;
+}
+
 .pet-img-squircle { 
-    width: 180px; height: 180px; border-radius: 50px; 
-    background-size: cover; background-position: center; flex-shrink: 0;
+    width: 160px; 
+    height: 160px; 
+    border-radius: 50px; 
+    background-size: cover; 
+    background-position: center; 
+    flex-shrink: 0;
     border: 6px solid rgba(255,255,255,0.15);
 }
-.pet-info { text-align: left; flex: 1; }
-.pet-name { font-size: 4.5rem; font-weight: 700; margin-bottom: 12px; line-height: 1; }
-.pet-desc { font-size: 1.1rem; line-height: 1.4; opacity: 0.95; margin-bottom: 25px; }
-.see-more-pill { background: var(--soft-pink); color: white; border-radius: 30px; padding: 10px 40px; text-decoration: none; font-weight: 700; }
+
+.pet-info { 
+    text-align: left; 
+    flex: 1; 
+    display: flex; 
+    flex-direction: column; 
+    justify-content: center;
+    overflow: hidden; /* Prevents text overflow from stretching the card */
+}
+
+.pet-name { 
+    /* Reduced from 4.5rem to handle long names like 'angela jahziel' */
+    font-size: 3rem; 
+    font-weight: 700; 
+    margin-bottom: 5px; 
+    line-height: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis; /* Adds '...' if the name is too long */
+}
+
+.pet-desc { 
+    font-size: 1rem; 
+    line-height: 1.3; 
+    opacity: 0.95; 
+    margin-bottom: 15px;
+    /* Limit description to 2-3 lines to maintain alignment */
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.see-more-pill { 
+    width: fit-content;
+    background: var(--soft-pink); 
+    color: white; 
+    border-radius: 30px; 
+    padding: 8px 35px; 
+    text-decoration: none; 
+    font-weight: 700; 
+    font-size: 0.9rem;
+}
 
 /* --- COMMUNITY WALL (STABLE GRID) --- */
 .community-wall { background: #fdefff; padding: 100px 5%; text-align: center; }

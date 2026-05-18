@@ -58,10 +58,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <img src="../resources/Logo.png" alt="CampusTails">
                 </div>
                 <nav class="nav-links">
-                    <a href="#">home</a>
-                    <a href="#">about</a>
-                    <a href="#">pets</a>
-                    <a href="#" class="active">login</a>
+                   <a href="../home/index.php" >home</a>
+                    <a href="../guest/aboutpage.php">about</a>
+                    <a href="../pets_directory/pets.php">pets</a>
+                    <a href="../login/index.php" class="active">login</a>
                 </nav>
             </div>
         </header>
