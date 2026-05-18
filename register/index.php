@@ -4,58 +4,85 @@ include('../utils/db_config.php');
 $error = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // 1. Collect Data
+    // 1. Collect Data & Validate Passwords
     $role = $_POST['role']; 
     $username = $_POST['username'];
-    $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
+    $password_raw = $_POST['password'];
+    $confirm_password = $_POST['confirm_password'];
 
-    // 2. Check PawCrewCode
-    $account_type = 'user';
-    if (!empty($_POST['crew_code'])) {
-        $codeCheck = supabase_query("admin_codes?admin_code=eq." . $_POST['crew_code']);
-        if (!empty($codeCheck)) { $account_type = 'admin'; }
-    }
-
-    // 3. Prepare User Data
-    $userData = [
-        "first_name" => $_POST['first_name'],
-        "last_name"  => $_POST['last_name'],
-        "username"   => $username,
-        "email"      => $_POST['email'],
-        "password_hash" => $password,
-        "contact_number" => $_POST['contact'],
-        "affiliation" => $_POST['affiliations'],
-        "role" => $role,
-        "account_type" => $account_type
-    ];
-
-    // 4. Attempt Insert
-    $userResponse = supabase_query("paw_users", "POST", $userData);
-
-    // DEBUG: If you get an error, this will stop the script and show it
-    if (!isset($userResponse[0]['user_id'])) {
-        echo "<h3>Supabase Error Debug:</h3><pre>";
-        print_r($userResponse);
-        echo "</pre>";
-        die(); 
-    }
-
-    // 5. If Success, Insert Profile
-    $new_uuid = $userResponse[0]['user_id'];
-    if ($role === 'student') {
-        $profileData = ["user_id" => $new_uuid, "student_number" => $_POST['id_number'], "program" => $_POST['program'], "year_level" => $_POST['year_level']];
-        supabase_query("student_profiles", "POST", $profileData);
+    if ($password_raw !== $confirm_password) {
+        $error = "Passwords do not match!";
     } else {
-        $profileData = ["user_id" => $new_uuid, "office" => $_POST['office'], "institutional_email" => $_POST['email']];
-        supabase_query("faculty_profiles", "POST", $profileData);
-    }
+        $password = password_hash($password_raw, PASSWORD_DEFAULT);
 
-    // 6. POP-UP AND REDIRECT
-    echo "<script>
-            alert('Sign in successful! You can now log in.');
-            window.location.href = '../login/index.php';
-          </script>";
-    exit();
+        // 2. Check PawCrewCode (Admin Verification)
+        $account_type = 'user';
+        if (!empty($_POST['crew_code'])) {
+            $codeCheck = supabase_query("admin_codes?admin_code=eq." . urlencode($_POST['crew_code']), "GET");
+            if (!empty($codeCheck)) { 
+                $account_type = 'admin'; 
+            }
+        }
+
+        // 3. Prepare User Data
+        $userData = [
+            "first_name"     => $_POST['first_name'],
+            "last_name"      => $_POST['last_name'],
+            "username"       => $username,
+            "email"          => $_POST['email'],
+            "password_hash"  => $password,
+            "contact_number" => $_POST['contact'],
+            "affiliation"    => $_POST['affiliations'],
+            "role"           => $role,
+            "account_type"   => $account_type
+        ];
+
+        // 4. Attempt Insert
+        $userResponse = supabase_query("paw_users", "POST", $userData);
+
+        // Check for unique constraint violations or errors
+        if (isset($userResponse['code'])) {
+            if ($userResponse['code'] === '23505') {
+                if (strpos($userResponse['message'], 'username') !== false) {
+                    $error = "The username '" . $username . "' is already taken. Please choose another one.";
+                } else {
+                    $error = "This email address is already registered to an account.";
+                }
+            } else {
+                $error = "Database Error: " . $userResponse['message'];
+            }
+        } 
+        // 5. If Success, Insert Into Specific Profile Type
+        else if (!empty($userResponse) && isset($userResponse[0]['user_id'])) {
+            $new_uuid = $userResponse[0]['user_id'];
+            
+            if ($role === 'student') {
+                $profileData = [
+                    "user_id"        => $new_uuid, 
+                    "student_number" => $_POST['id_number'], 
+                    "program"        => $_POST['program'], 
+                    "year_level"     => $_POST['year_level']
+                ];
+                supabase_query("student_profiles", "POST", $profileData);
+            } else if ($role === 'faculty') {
+                $profileData = [
+                    "user_id"             => $new_uuid, 
+                    "office"              => $_POST['office'], 
+                    "institutional_email" => $_POST['email']
+                ];
+                supabase_query("faculty_profiles", "POST", $profileData);
+            }
+
+            // Success Pop-up and Redirect
+            echo "<script>
+                    alert('Sign up successful! You can now log in.');
+                    window.location.href = '../login/index.php';
+                  </script>";
+            exit();
+        } else {
+            $error = "Registration failed due to an unexpected response configuration format.";
+        }
+    }
 }
 ?>
 
@@ -71,17 +98,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </head>
 <body>
     <div class="reg-master">
-        <!-- NAVBAR -->
         <header class="reg-header">
             <div class="nav-container">
                 <div class="logo-side"><img src="../resources/Logo.png" alt="CampusTails"></div>
                 <nav class="nav-links">
-                    <a href="#">home</a><a href="#">about</a><a href="#">pets</a><a href="../login/login.php">login</a>
+                    <a href="#">home</a><a href="#">about</a><a href="#">pets</a><a href="../login/index.php">login</a>
                 </nav>
             </div>
         </header>
 
-        <!-- FORM CONTENT -->
         <main class="reg-container">
             <div class="reg-title">
                 <img src="../resources/Logo.png" alt="Logo" class="mini-logo">
@@ -130,18 +155,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <input type="password" name="crew_code">
                     </div>
 
-                    <!-- Hidden fields toggled by JS -->
-                    <div class="input-group" id="programBox">
-                        <label>Program <span class="req">*</span> <small>"appear only for student"</small></label>
-                        <input type="text" name="program">
+                    <div class="input-group" id="programBox" style="display: none;">
+                        <label>Program <span class="req">*</span></label>
+                        <input type="text" name="program" id="programInput">
                     </div>
-                    <div class="input-group" id="yearBox">
-                        <label>Year Level <span class="req">*</span> <small>"appear only for student"</small></label>
-                        <input type="text" name="year_level">
+                    <div class="input-group" id="yearBox" style="display: none;">
+                        <label>Year Level <span class="req">*</span></label>
+                        <input type="text" name="year_level" id="yearInput">
                     </div>
-                    <div class="input-group span-full" id="officeBox">
-                        <label>Office <span class="req">*</span> <small>"appear only for faculty"</small></label>
-                        <input type="text" name="office">
+                    <div class="input-group span-full" id="officeBox" style="display: none;">
+                        <label>Office <span class="req">*</span></label>
+                        <input type="text" name="office" id="officeInput">
                     </div>
 
                     <div class="input-group">
@@ -169,16 +193,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 </div>
 
                 <div class="form-footer">
-                 <div class="terms-container">
-                      <input type="checkbox" id="terms" required>
-                     <label for="terms">By signing up, I agree to the <a href="#">Terms and Conditions</a>.</label>
-                </div>
+                     <div class="terms-container">
+                          <input type="checkbox" id="terms" required>
+                         <label for="terms">By signing up, I agree to the <a href="#">Terms and Conditions</a>.</label>
+                    </div>
                     <button type="submit" class="signup-btn">SIGNUP</button>
                 </div>
             </form>
         </main>
 
-        <!-- FOOTER VISUAL -->
         <div class="footer-visual">
             <div class="cta-content">
                 <h2>Want to be a<br>Campus Crew?</h2>
@@ -192,19 +215,41 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </div>
 
     <script>
-        // Role toggle logic
         const roleSelect = document.getElementById('roleSelect');
         const pBox = document.getElementById('programBox');
         const yBox = document.getElementById('yearBox');
         const oBox = document.getElementById('officeBox');
+        
+        const programInput = document.getElementById('programInput');
+        const yearInput = document.getElementById('yearInput');
+        const officeInput = document.getElementById('officeInput');
 
         roleSelect.addEventListener('change', () => {
             if(roleSelect.value === 'student') {
-                pBox.style.display = 'block'; yBox.style.display = 'block'; oBox.style.display = 'none';
-            } else {
-                pBox.style.display = 'none'; yBox.style.display = 'none'; oBox.style.display = 'block';
+                pBox.style.display = 'block'; 
+                yBox.style.display = 'block'; 
+                oBox.style.display = 'none';
+                
+                programInput.required = true;
+                yearInput.required = true;
+                officeInput.required = false;
+            } else if(roleSelect.value === 'faculty') {
+                pBox.style.display = 'none'; 
+                yBox.style.display = 'none'; 
+                oBox.style.display = 'block';
+                
+                programInput.required = false;
+                yearInput.required = false;
+                officeInput.required = true;
             }
         });
     </script>
+
+    <?php if (!empty($error)): ?>
+        <script>
+            // Safely converts PHP string variables into valid JavaScript structures
+            alert(<?php echo json_encode($error); ?>);
+        </script>
+    <?php endif; ?>
 </body>
 </html>

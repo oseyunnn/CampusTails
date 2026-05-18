@@ -26,18 +26,37 @@ $SUPABASE_USER_URL = $env['SUPABASE_USER_URL'] ?? null;
 $SUPABASE_USER_KEY = $env['SUPABASE_USER_KEY'] ?? null;
 
 // Validation
-if (!$SUPABASE_URL || !$SUPABASE_KEY) {
+if (!$SUPABASE_URL || !$SUPABASE_KEY || !$SUPABASE_USER_URL || !$SUPABASE_USER_KEY) {
     header('Content-Type: application/json');
-    die(json_encode(["success" => false, "message" => "Main Supabase keys missing in .env"]));
+    die(json_encode(["success" => false, "message" => "Required Supabase database keys are missing in your .env file."]));
 }
 
 function supabase_query($endpoint, $method = 'GET', $data = null) {
-    global $SUPABASE_URL, $SUPABASE_KEY;
+    // Bring all connection sets into scope
+    global $SUPABASE_URL, $SUPABASE_KEY, $SUPABASE_USER_URL, $SUPABASE_USER_KEY;
 
-    $baseUrl = rtrim($SUPABASE_URL, '/');
-    $apiKey = $SUPABASE_KEY;
+    // Define all target endpoints/tables belonging to your dbUser database
+    $userDbTables = ['paw_users', 'admin_codes', 'student_profiles', 'faculty_profiles', 'activity_logs', 'favorites'];
+    
+    // Determine which database credentials to apply
+    $useUserDb = false;
+    foreach ($userDbTables as $table) {
+        if (strpos($endpoint, $table) === 0) {
+            $useUserDb = true;
+            break;
+        }
+    }
 
-    // Ensure URL has /rest/v1/
+    // Assign URLs dynamically
+    if ($useUserDb) {
+        $baseUrl = rtrim($SUPABASE_USER_URL, '/');
+        $apiKey = $SUPABASE_USER_KEY;
+    } else {
+        $baseUrl = rtrim($SUPABASE_URL, '/');
+        $apiKey = $SUPABASE_KEY;
+    }
+
+    // Ensure URL matches PostgREST syntax rules
     if (strpos($baseUrl, '/rest/v1') === false) {
         $url = $baseUrl . "/rest/v1/" . ltrim($endpoint, '/');
     } else {
@@ -73,12 +92,14 @@ function supabase_upload($bucket, $file) {
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
     curl_setopt($ch, CURLOPT_POSTFIELDS, file_get_contents($file['tmp_name']));
-    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    $headers = [
         "apikey: $SUPABASE_KEY",
         "Authorization: Bearer $SUPABASE_KEY",
         "Content-Type: " . $file['type'],
         "x-upsert: true"
-    ]);
+    ];
+    
+    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
     
     $response = curl_exec($ch);
     $status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
