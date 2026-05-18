@@ -2,38 +2,44 @@
 session_start();
 include('../utils/db_config.php');
 
-// 1. Session Security Check
-if (!isset($_SESSION['user_id'])) {
+// Ensure user is logged in
+$user_id = $_SESSION['user_id'] ?? null;
+if (!$user_id) {
     header("Location: ../login/index.php");
     exit();
 }
 
-$user_id = $_SESSION['user_id'];
+$first_name = $_SESSION['first_name'] ?? 'User';
 
-// 2. Query Base Account Info
-$user_data = supabase_query("paw_users?user_id=eq." . urlencode($user_id) . "&select=*");
-$current_user = (is_array($user_data) && isset($user_data[0])) ? $user_data[0] : null;
+// 1. Fetch ALL Favorites to get total count and pool for randomization
+$fav_endpoint = "favorites?user_id=eq.$user_id&select=pets(*)";
+$fav_results = supabase_query($fav_endpoint);
 
-// 3. Query Linked Favorite Relationships
-$favorites_endpoint = "favorites?user_id=eq." . urlencode($user_id) . "&select=*,pets(*)";
-$raw_favorites = supabase_query($favorites_endpoint);
+// Initialize variables
+$total_fav_count = 0;
+$display_pets = [];
 
-$favorite_pets = [];
-if (is_array($raw_favorites)) {
-    foreach ($raw_favorites as $fav) {
-        if (!empty($fav['pets'])) {
-            $favorite_pets[] = $fav['pets'];
+if (is_array($fav_results) && !empty($fav_results)) {
+    // The actual total count for the stat card
+    $total_fav_count = count($fav_results);
+
+    // Shuffle the entire array to make the selection random
+    shuffle($fav_results);
+
+    // Pick only the first 4 items from the shuffled list
+    $random_selection = array_slice($fav_results, 0, 4);
+
+    // Extract the pet data from the joined result
+    foreach ($random_selection as $row) {
+        if (isset($row['pets'])) {
+            $display_pets[] = $row['pets'];
         }
     }
 }
 
-// 4. Randomization & Absolute Slicing Bounds
-$total_favorites_count = count($favorite_pets); // Metric remains true to full database entries
-
-if (!empty($favorite_pets)) {
-    shuffle($favorite_pets); // Randomize positions dynamically on reload
-}
-$displayed_favorites = array_slice($favorite_pets, 0, 4); // Limit gallery to a maximum of 4 records
+// 2. Fetch Adopted Pets Count
+$adopted_results = supabase_query("pets?is_adopted=eq.true&user_id=eq.$user_id");
+$adopted_count = is_array($adopted_results) ? count($adopted_results) : 0;
 ?>
 
 <!DOCTYPE html>
@@ -43,106 +49,74 @@ $displayed_favorites = array_slice($favorite_pets, 0, 4); // Limit gallery to a 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CampusTails | User Dashboard</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
 
-    <div class="dash-master">
-        <header class="dash-header">
+    <div class="dashboard-wrapper">
+        <!-- HEADER (Same as before) -->
+        <header>
             <div class="nav-container">
-                <div class="logo-side">
-                    <img src="../resources/Logo.png" alt="CampusTails Logo">
-                </div>
-                <nav class="nav-links">
-                    <a href="#" class="active">dashboard</a>
-                    <a href="#">pets</a>
-                    <a href="../login/index.php"><i class="fas fa-sign-out-alt"></i> logout</a>
+                <div class="logo"><img src="../resources/Logo.png" alt="CampusTails"></div>
+                <nav class="main-nav">
+                    <a href="#" class="active">home</a>
+                    <a href="../pets_directory/pets.php">pets</a>
+                    <a href="../user_profile/index.php">profile</a>
+                    <a href="../login/index.php" class="logout-btn">logout</a>
                 </nav>
             </div>
         </header>
 
-        <main class="dash-content">
-            
-            <section class="left-panel">
-                <div class="profile-card">
-                    <div class="avatar-holder">
-                        <img src="../resources/avatar-placeholder.png" alt="Profile Avatar" class="avatar-img">
-                    </div>
-                    <div class="profile-details">
-                        <h2>
-                            <?php 
-                            echo htmlspecialchars(($current_user['first_name'] ?? 'Paw') . ' ' . ($current_user['last_name'] ?? 'Crew')); 
-                            ?>
-                        </h2>
-                        <span class="user-role-badge"><?php echo htmlspecialchars(ucfirst($current_user['role'] ?? 'User')); ?></span>
-                        
-                        <p class="meta-info"><i class="far fa-envelope"></i> <?php echo htmlspecialchars($current_user['email'] ?? 'N/A'); ?></p>
-                        <p class="meta-info"><i class="fas fa-phone-alt"></i> <?php echo htmlspecialchars($current_user['contact_number'] ?? 'N/A'); ?></p>
-                        
-                        <?php if (!empty($current_user['affiliation'])): ?>
-                            <div class="user-affiliation-segment">
-                                <strong>Affiliation:</strong>
-                                <p><?php echo htmlspecialchars($current_user['affiliation']); ?></p>
-                            </div>
-                        <?php endif; ?>
-                    </div>
-                </div>
-            </section>
+        <!-- WELCOME & STATS -->
+        <main class="user-hero">
+            <div class="welcome-text">
+                <h1>Welcome, <?php echo htmlspecialchars($first_name); ?>!</h1>
+                <p>Have a pawmazing day today!</p>
+            </div>
 
-            <section class="right-panel">
-                
-                <div class="stats-strip">
-                    <div class="stat-card fav-metric-theme">
-                        <div class="stat-info">
-                            <h3><?php echo $total_favorites_count; ?></h3>
-                            <p>My Favorite Pets</p>
-                        </div>
-                        <div class="stat-icon">
-                            <i class="fas fa-heart"></i>
-                        </div>
-                    </div>
+            <div class="user-stats-grid">
+                <div class="stat-card bg-blue">
+                    <span class="stat-number"><?php echo $adopted_count; ?></span>
+                    <span class="stat-label">Pets<br>Adopted</span>
                 </div>
-
-                <div class="panel-headline">
-                    <h3>My Favorites Gallery <span class="rotation-notice">(Randomized Rotation)</span></h3>
+                <div class="stat-card bg-lavender">
+                    <!-- The counter shows the ACTUAL total (e.g. 10) -->
+                    <span class="stat-number"><?php echo $total_fav_count; ?></span>
+                    <span class="stat-label">Favorite<br>Pets</span>
                 </div>
-
-                <div class="tools-grid">
-                    <?php if (!empty($displayed_favorites)): ?>
-                        <?php foreach ($displayed_favorites as $pet): ?>
-                            <div class="tool-card pet-card-item">
-                                <div class="pet-img-frame">
-                                    <?php if (!empty($pet['image_url'])): ?>
-                                        <img src="<?php echo htmlspecialchars($pet['image_url']); ?>" alt="<?php echo htmlspecialchars($pet['name']); ?>">
-                                    <?php else: ?>
-                                        <img src="../resources/pet-placeholder.png" alt="Pet Profile Picture">
-                                    <?php endif; ?>
-                                    
-                                    <span class="status-badge <?php echo isset($pet['is_adopted']) && $pet['is_adopted'] ? 'badge-adopted' : 'badge-monitoring'; ?>">
-                                        <?php echo isset($pet['is_adopted']) && $pet['is_adopted'] ? 'Adopted' : 'Monitoring'; ?>
-                                    </span>
-                                </div>
-                                <div class="pet-card-info">
-                                    <div class="pet-card-header">
-                                        <h4><?php echo htmlspecialchars($pet['name'] ?? 'Unnamed Pet'); ?></h4>
-                                        <span class="species-label"><?php echo htmlspecialchars($pet['species'] ?? 'Unknown'); ?></span>
-                                    </div>
-                                    <p class="pet-meta-desc"><i class="fas fa-map-marker-alt"></i> Found: <?php echo htmlspecialchars($pet['location_found'] ?? 'Campus Grounds'); ?></p>
-                                    <p class="pet-meta-desc"><strong>Condition:</strong> <?php echo htmlspecialchars($pet['health_status'] ?? 'Stable'); ?></p>
-                                </div>
-                            </div>
-                        <?php endforeach; ?>
-                    <?php else: ?>
-                        <div class="empty-fallback-state">
-                            <i class="far fa-heart"></i>
-                            <p>You haven't marked any campus pets as favorites yet.</p>
-                        </div>
-                    <?php endif; ?>
-                </div>
-
-            </section>
+            </div>
         </main>
+
+        <!-- RANDOM FAVORITES SPOTLIGHT -->
+        <section class="favorites-section">
+            <div class="section-header">
+                <h2>Your Favorites</h2>
+                <p>Today's Random Spotlight</p>
+            </div>
+
+            <div class="favorites-grid">
+                <?php if (!empty($display_pets)): ?>
+                    <?php foreach ($display_pets as $pet): ?>
+                        <div class="pet-mini-card">
+                            <div class="pet-img-container">
+                                <img src="<?php echo $pet['profile_image'] ?? '../resources/default-pet.png'; ?>" alt="Pet">
+                                <div class="heart-icon"><i class="fas fa-heart"></i></div>
+                            </div>
+                            <div class="pet-details">
+                                <h3><?php echo htmlspecialchars($pet['pet_name']); ?></h3>
+                                <p><?php echo htmlspecialchars(substr($pet['description'], 0, 100)) . '...'; ?></p>
+                                <a href="../pet_profile/profile.php?id=<?php echo $pet['pet_id']; ?>" class="see-more-btn">See More</a>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <p class="empty-msg">You haven't added any favorites yet!</p>
+                <?php endif; ?>
+            </div>
+        </section>
+
+        <footer>www.campustails.com</footer>
     </div>
 
 </body>

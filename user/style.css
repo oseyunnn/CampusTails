@@ -1,348 +1,138 @@
-/* --- CSS GLOBAL PARAMETERS & CORE PALETTE --- */
 :root {
-    --primary-purple: #9396E6;
-    --background-cream: #FCF8F2;
-    --card-shadow: 0 8px 24px rgba(147, 150, 230, 0.08);
-    --text-dark: #444;
+    --primary-purple: #7B61FF;
+    --dark-purple: #6D59A4;
+    --bg-pink: #FBDFFF; /* The soft pink background for favorites */
+    --stat-blue: #8C96E6;
+    --stat-lavender: #B899E2;
+    --btn-pink: #F1A7B4;
 }
 
-body {
-    background-color: var(--background-cream);
-    font-family: 'Fredoka', sans-serif;
-    margin: 0;
-    padding: 0;
-    color: var(--text-dark);
-}
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Fredoka', sans-serif; }
 
-.dash-master {
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-}
+body { background-color: #fff; color: var(--dark-purple); }
 
-/* --- HEADER NAVBAR STYLING (Identical to Admin) --- */
-.dash-header {
-    background: white;
-    padding: 15px 5%;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+/* Header reuse */
+header { padding: 25px 5% 10px; }
+.nav-container { 
+    border: 2px solid #EEE; border-radius: 100px; display: flex; 
+    justify-content: space-between; align-items: center; padding: 12px 40px; background: white; 
 }
+.logo img { height: 45px; }
+.main-nav { display: flex; gap: 25px; }
+.main-nav a { text-decoration: none; color: var(--primary-purple); font-weight: 600; font-size: 1.1rem; }
+.main-nav a.active { border-bottom: 3px solid var(--primary-purple); padding-bottom: 5px; }
 
-.nav-container {
+/* User Hero Section */
+.user-hero {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    padding: 60px 10%;
+    background-color: #fff;
 }
 
-.logo-side img { 
-    height: 45px; 
-}
+.welcome-text h1 { font-size: 4.5rem; color: var(--dark-purple); line-height: 1; }
+.welcome-text p { font-size: 1.5rem; font-weight: 600; margin-top: 10px; }
 
-.nav-links a {
-    text-decoration: none;
-    color: #777;
-    font-weight: 600;
-    margin-left: 25px;
-    transition: 0.2s ease;
-}
-
-.nav-links a.active, .nav-links a:hover { 
-    color: var(--primary-purple); 
-}
-
-.nav-links i {
-    margin-right: 5px;
-}
-
-/* --- THE CRITICAL FIX: SIDE-BY-SIDE SPLIT LAYOUT --- */
-.dash-content {
-    display: grid;
-    grid-template-columns: 320px 1fr; /* Defines the exact side-by-side split columns */
-    gap: 30px;
-    padding: 40px 5%;
-    max-width: 1400px;
-    margin: 0 auto;
-    width: 90%;
-    flex: 1;
-    align-items: start;
-}
-
-/* --- LEFT PANEL: BIOGRAPHY SUMMARY CARD --- */
-.left-panel {
-    width: 100%;
-}
-
-.profile-card {
-    background: white;
-    border-radius: 28px;
-    padding: 35px 25px;
-    text-align: center;
-    box-shadow: var(--card-shadow);
-    box-sizing: border-box;
-}
-
-.avatar-holder {
-    width: 125px;
-    height: 125px;
-    border-radius: 50%;
-    margin: 0 auto 20px;
-    overflow: hidden;
-    border: 4px solid var(--primary-purple);
-    background: #f7f7f7;
-}
-
-.avatar-img { 
-    width: 100%; 
-    height: 100%; 
-    object-fit: cover; 
-}
-
-.profile-details h2 {
-    margin: 10px 0 5px;
-    font-size: 1.5rem;
-    color: #333;
-}
-
-.user-role-badge {
-    display: inline-block;
-    background: #E8E9FF;
-    color: var(--primary-purple);
-    padding: 5px 16px;
-    border-radius: 20px;
-    font-weight: 600;
-    font-size: 0.85rem;
-    margin-bottom: 25px;
-    text-transform: capitalize;
-}
-
-.meta-info { 
-    font-size: 0.9rem; 
-    color: #666; 
-    margin: 12px 0; 
-    text-align: left;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.meta-info i { 
-    color: var(--primary-purple); 
-    width: 20px;
-    font-size: 1rem;
-}
-
-.user-affiliation-segment { 
-    margin-top: 25px; 
-    padding-top: 15px; 
-    border-top: 1px dashed #eee; 
-    text-align: left; 
-    font-size: 0.9rem; 
-}
-
-.user-affiliation-segment strong {
-    color: #555;
-}
-
-.user-affiliation-segment p {
-    margin: 5px 0 0;
-    color: #777;
-}
-
-/* --- RIGHT PANEL: METRIC BANNER & GALLERY --- */
-.right-panel {
-    width: 100%;
-}
-
-/* Metric Counter Box (Matches Admin Architecture) */
-.stats-strip {
-    margin-bottom: 30px;
-}
+.user-stats-grid { display: flex; gap: 20px; }
 
 .stat-card {
-    background: white;
-    border-radius: 24px;
-    padding: 25px 30px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 280px;
-    box-shadow: var(--card-shadow);
-    box-sizing: border-box;
-    border-left: 6px solid #FF8BA7; /* Distinct favorite panel indicator pink color */
-}
-
-.stat-info h3 { 
-    margin: 0; 
-    font-size: 2.3rem; 
-    color: #333; 
-    font-weight: 700;
-}
-
-.stat-info p { 
-    margin: 5px 0 0; 
-    color: #777; 
-    font-weight: 500; 
-    font-size: 0.95rem;
-}
-
-.stat-icon i { 
-    font-size: 2.4rem; 
-    color: #FF8BA7; 
-}
-
-/* Sub-Headline Header styling */
-.panel-headline { 
-    margin: 35px 0 20px; 
-}
-
-.panel-headline h3 { 
-    color: #333; 
-    font-size: 1.4rem; 
-    margin: 0; 
-    font-weight: 600;
-}
-
-.rotation-notice { 
-    font-size: 0.85rem; 
-    color: #999; 
-    font-weight: 400; 
-    margin-left: 6px; 
-}
-
-/* --- THE RECONSTRUCTED RESPONSIVE FAV CARD GRID --- */
-.tools-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); /* Organizes elements cleanly side-by-side */
-    gap: 25px;
-    width: 100%;
-}
-
-.pet-card-item { 
-    background: white;
-    border-radius: 24px;
-    box-shadow: var(--card-shadow);
-    padding: 0 !important; /* Resets structural reference layout overrides padding */
-    overflow: hidden; 
-    display: flex; 
-    flex-direction: column; 
-    transition: transform 0.2s ease;
-}
-
-.pet-card-item:hover {
-    transform: translateY(-5px);
-}
-
-.pet-img-frame { 
-    position: relative; 
-    height: 170px; 
-    width: 100%; 
-    background: #f0f0f0; 
-}
-
-.pet-img-frame img { 
-    width: 100%; 
-    height: 100%; 
-    object-fit: cover; 
-}
-
-/* Floating Badges */
-.status-badge {
-    position: absolute;
-    top: 12px;
-    right: 12px;
-    padding: 4px 12px;
-    border-radius: 12px;
-    font-size: 0.75rem;
-    font-weight: 600;
-    color: white;
-}
-
-.badge-monitoring { background: var(--primary-purple); }
-.badge-adopted { background: #52C41A; }
-
-/* Text Area of Pet Cards */
-.pet-card-info { 
-    padding: 20px; 
-    flex: 1; 
+    width: 210px;
+    height: 280px;
+    border-radius: 30px;
     display: flex;
     flex-direction: column;
-}
-
-.pet-card-header { 
-    display: flex; 
-    justify-content: space-between; 
-    align-items: center; 
-    margin-bottom: 12px; 
-}
-
-.pet-card-header h4 { 
-    margin: 0; 
-    font-size: 1.2rem; 
-    color: #333; 
-    font-weight: 600;
-}
-
-.species-label { 
-    font-size: 0.75rem; 
-    background: #F0F2F5; 
-    padding: 3px 10px; 
-    border-radius: 8px; 
-    color: #666; 
-    font-weight: 500;
-}
-
-.pet-meta-desc { 
-    font-size: 0.85rem; 
-    color: #666; 
-    margin: 6px 0; 
-}
-
-.pet-meta-desc i { 
-    color: var(--primary-purple); 
-    width: 16px;
-}
-
-/* Empty State Fallback configuration */
-.empty-fallback-state {
-    grid-column: 1 / -1;
+    justify-content: center;
+    align-items: center;
+    color: white;
     text-align: center;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+}
+
+.stat-number { font-size: 10rem; font-weight: 700; line-height: 0.8; }
+.stat-label { font-size: 1.5rem; font-weight: 600; margin-top: 20px; line-height: 1.1; }
+
+.bg-blue { background-color: var(--stat-blue); }
+.bg-lavender { background-color: var(--stat-lavender); }
+
+/* Favorites Section */
+.favorites-section {
+    background-color: var(--bg-pink);
+    padding: 80px 10%;
+}
+
+.section-header { text-align: center; margin-bottom: 50px; }
+.section-header h2 { font-size: 4rem; color: var(--dark-purple); line-height: 1; }
+.section-header p { font-size: 1.2rem; font-weight: 600; opacity: 0.8; }
+
+.favorites-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+}
+
+.pet-mini-card {
+    background-color: var(--dark-purple);
+    border-radius: 60px;
+    padding: 30px;
+    display: flex;
+    align-items: center;
+    color: white;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+}
+
+.pet-img-container {
+    position: relative;
+    width: 180px;
+    height: 180px;
+    flex-shrink: 0;
+}
+
+.pet-img-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 5px solid rgba(255,255,255,0.2);
+}
+
+.heart-icon {
+    position: absolute;
+    bottom: 0;
+    right: 0;
     background: white;
-    padding: 60px;
-    border-radius: 24px;
-    color: #bbb;
-    box-shadow: var(--card-shadow);
+    color: var(--btn-pink);
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
 }
 
-.empty-fallback-state i { 
-    font-size: 3rem; 
-    margin-bottom: 15px; 
-    color: #ddd;
+.pet-details { padding-left: 30px; }
+.pet-details h3 { font-size: 4rem; line-height: 1; margin-bottom: 10px; }
+.pet-details p { font-size: 0.9rem; opacity: 0.9; margin-bottom: 20px; line-height: 1.4; }
+
+.see-more-btn {
+    display: inline-block;
+    background-color: var(--btn-pink);
+    color: white;
+    text-decoration: none;
+    padding: 10px 35px;
+    border-radius: 25px;
+    font-weight: 700;
+    transition: 0.3s;
 }
 
-/* --- MOBILE & TABLET ADAPTATION OVERRIDES --- */
-@media (max-width: 992px) {
-    .dash-content { 
-        grid-template-columns: 1fr; /* Fall back to single column if space is constrained */
-        padding: 20px 4%;
-    }
-    
-    .profile-card {
-        display: flex;
-        text-align: left;
-        align-items: center;
-        gap: 30px;
-    }
-    
-    .avatar-holder {
-        margin: 0;
-    }
-}
+.see-more-btn:hover { transform: scale(1.05); filter: brightness(1.1); }
 
-@media (max-width: 576px) {
-    .profile-card {
-        flex-direction: column;
-        text-align: center;
-    }
-    .avatar-holder {
-        margin: 0 auto 15px;
-    }
+footer { background-color: var(--stat-blue); color: white; text-align: center; padding: 25px; font-weight: 600; }
+
+/* Responsive */
+@media (max-width: 1200px) {
+    .user-hero { flex-direction: column; text-align: center; gap: 40px; }
+    .favorites-grid { grid-template-columns: 1fr; }
 }
