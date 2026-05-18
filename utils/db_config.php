@@ -20,13 +20,13 @@ if (file_exists($envFile)) {
 }
 
 // Extract variables from our custom $env array
-$SUPABASE_URL = $env['SUPABASE_URL'] ?? null;
-$SUPABASE_KEY = $env['SUPABASE_KEY'] ?? null;
-$SUPABASE_USER_URL = $env['SUPABASE_USER_URL'] ?? null;
-$SUPABASE_USER_KEY = $env['SUPABASE_USER_KEY'] ?? null;
+$SUPABASE_URL = $env['SUPABASE_URL'] ?? $env['supabase_url'] ?? null;
+$SUPABASE_KEY = $env['SUPABASE_KEY'] ?? $env['supabase_key'] ?? null;
+$SUPABASE_USER_URL = $env['SUPABASE_USER_URL'] ?? $env['supabase_user_url'] ?? $SUPABASE_URL;
+$SUPABASE_USER_KEY = $env['SUPABASE_USER_KEY'] ?? $env['supabase_user_key'] ?? $SUPABASE_KEY;
 
 // Validation
-if (!$SUPABASE_URL || !$SUPABASE_KEY || !$SUPABASE_USER_URL || !$SUPABASE_USER_KEY) {
+if (!$SUPABASE_URL || !$SUPABASE_KEY) {
     header('Content-Type: application/json');
     die(json_encode(["success" => false, "message" => "Required Supabase database keys are missing in your .env file."]));
 }
