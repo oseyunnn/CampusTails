@@ -98,10 +98,47 @@ h1 { color: var(--primary-purple); font-weight: 600; margin-bottom: 30px; }
     margin-bottom: 30px;
 }
 
-table { width: 100%; border-collapse: separate; border-spacing: 0 10px; }
-th { text-align: left; padding: 15px 20px; color: var(--primary-purple); font-weight: 600; background: rgba(246, 214, 248, 0.4); border-radius: 10px; }
-td { padding: 15px 20px; background: var(--white); border-bottom: 1px solid #f1f1f1; }
+/* --- FORCE EVERYTHING LEFT --- */
+table { 
+    width: 100%; 
+    border-collapse: separate; 
+    border-spacing: 0 15px; 
+    table-layout: fixed; /* Keeps columns organized */
+}
 
+/* Define widths but keep all text aligned LEFT */
+.col-user { width: 25%; text-align: left; }
+.col-email { width: 35%; text-align: left; }
+.col-role { width: 15%; text-align: left; }
+.col-type { width: 15%; text-align: left; }
+.col-action { width: 10%; text-align: left; }
+
+th { 
+    padding: 18px 25px; 
+    background: #F6D6F8;
+    color: #7B61BA; 
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-radius: 15px;
+    text-align: left !important; /* Forces header text left */
+}
+
+td { 
+    padding: 20px 25px; 
+    vertical-align: middle; 
+    background: white;
+    text-align: left !important; /* Forces cell content left */
+}
+
+/* Ensure badges/pills don't center themselves */
+.badge {
+    display: inline-flex;
+    justify-content: flex-start; 
+    text-align: left;
+    margin: 0;
+}
 /* --- Forms & Buttons --- */
 .form-group { margin-bottom: 20px; }
 label { display: block; margin-bottom: 8px; font-weight: 500; color: var(--primary-purple); }
@@ -202,3 +239,203 @@ select:focus { border-color: var(--lavender); outline: none; }
 .print-only-header {
     display: none;
 }
+/* --- Restoring the Pretty Main Layout --- */
+/* --- Un-Squishing the Layout --- */
+.main-content {
+    margin-left: 280px;
+    padding: 60px 80px; /* Increased side padding for better balance */
+    width: calc(100% - 440px);
+    min-height: 100vh;
+}
+
+.glass-panel {
+    background: white;
+    padding: 50px; /* More padding inside the white card */
+    border-radius: 40px; /* Rounder for a softer look */
+    box-shadow: 0 20px 40px rgba(123, 97, 186, 0.04);
+}
+
+/* --- Table Spacing --- */
+table { 
+    width: 100%; 
+    border-collapse: separate; 
+    border-spacing: 0 18px; /* More vertical space between rows */
+    table-layout: fixed;    /* Prevents columns from jumping around */
+}
+
+th { 
+    padding: 20px 25px; 
+    background: #F6D6F8;
+    color: #7B61BA; 
+    font-size: 0.85rem;
+    letter-spacing: 1.5px;
+    border-radius: 18px;
+    font-weight: 700;
+}
+
+td { 
+    padding: 25px; /* Significant padding to un-squish text */
+    background: white;
+    vertical-align: middle;
+}
+
+/* --- Column Width Control --- */
+.col-user { width: 28%; }
+.col-email { width: 32%; }
+.col-role { width: 12%; }
+.col-type { width: 13%; }
+.col-action { width: 15%; text-align: right; } /* Align button to the right edge */
+
+/* --- Enhanced Pills --- */
+.badge {
+    padding: 8px 18px; /* Bigger "pill" look */
+    border-radius: 25px;
+    font-size: 0.7rem;
+    letter-spacing: 0.5px;
+}
+
+/* --- Sidebar Spacing Fix --- */
+.sidebar nav a {
+    padding: 16px 25px; /* More clickable area */
+    margin-bottom: 12px;
+}
+
+..logout-link {
+    margin-top: 40px !important; /* Separates it further from the line */
+    display: block;
+    background: var(--soft-pink);
+    color: white !important;
+    text-align: center;
+    padding: 14px 20px;
+    border-radius: 14px;
+    font-weight: 700;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.logout-link:hover {
+    background: #e58b99;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 15px rgba(240, 166, 177, 0.25);
+}
+
+/* --- PINK THEMED MODALS (Centered) --- */
+.modal-overlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(123, 97, 186, 0.2); /* Soft purple tint backdrop */
+    backdrop-filter: blur(8px);
+    display: none; /* Controlled by JS */
+    justify-content: center; /* Centers horizontally */
+    align-items: center;     /* Centers vertically */
+    z-index: 9999;
+}
+
+.modal-box {
+    background: white;
+    padding: 40px;
+    border-radius: 30px;
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+    animation: modalPop 0.3s ease-out;
+}
+
+@keyframes modalPop {
+    from { transform: scale(0.9); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+/* Changed Purple to Pink for Deletion Modals */
+.modal-box h3 {
+    color: #F0A6B1; 
+    margin-top: 0;
+    font-size: 1.6rem;
+    font-weight: 700;
+}
+
+.modal-btns {
+    display: flex;
+    gap: 15px;
+    margin-top: 30px;
+}
+
+.btn-modal {
+    flex: 1;
+    padding: 14px;
+    border-radius: 15px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn-cancel { background: #f5f5f5; color: #666; }
+.btn-delete-final { background: #F0A6B1; color: white; }
+.btn-delete-final:hover { background: #e58b99; transform: translateY(-2px); }
+
+#successModal h3 {
+    color: #F0A6B1 !important;
+    font-size: 1.6rem;
+    font-weight: 700;
+}
+
+/* 2. Change the "Close" Button to Pink */
+.btn-close-success { 
+    background: #F0A6B1 !important; 
+    color: white !important; 
+    width: 100%; 
+    padding: 14px;
+    border-radius: 15px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+/* 3. Add a hover effect for the pink button */
+.btn-close-success:hover {
+    background: #e58b99 !important;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(240, 166, 177, 0.3);
+}#successModal h3 {
+    color: #F0A6B1 !important;
+    font-size: 1.6rem;
+    font-weight: 700;
+}
+
+/* 2. Change the "Close" Button to Pink */
+.btn-close-success { 
+    background: #F0A6B1 !important; 
+    color: white !important; 
+    width: 100%; 
+    padding: 14px;
+    border-radius: 15px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+/* 3. Add a hover effect for the pink button */
+.btn-close-success:hover {
+    background: #e58b99 !important;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(240, 166, 177, 0.3);
+}
+/* --- SPECIFIC TABLE ALIGNMENT FIX --- */
+/* This aligns the headers (th) exactly with the data (td) */
+.col-user { width: 25%; text-align: left; }
+.col-email { width: 30%; text-align: left; }
+.col-role { width: 15%; text-align: center; }    /* Center Role */
+.col-type { width: 15%; text-align: center; }    /* Center Account Type */
+.col-action { width: 15%; text-align: right; }   /* Right align Actions */
+
+/* Apply the text alignment to both headers and data cells */
+th.col-role, td.col-role { text-align: center; }
+th.col-type, td.col-type { text-align: center; }
+th.col-action, td.col-action { text-align: right; }
+
+/* Ensure badges inside centered columns stay centered */
+td.col-role .badge { margin: 0 auto; display: inline-flex; }

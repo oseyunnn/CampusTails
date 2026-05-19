@@ -25,6 +25,9 @@ $SUPABASE_KEY = $env['SUPABASE_KEY'] ?? $env['supabase_key'] ?? null;
 $SUPABASE_USER_URL = $env['SUPABASE_USER_URL'] ?? $env['supabase_user_url'] ?? $SUPABASE_URL;
 $SUPABASE_USER_KEY = $env['SUPABASE_USER_KEY'] ?? $env['supabase_user_key'] ?? $SUPABASE_KEY;
 
+// Optional service role key for server-side mutations (required when RLS blocks anon keys)
+$SUPABASE_SERVICE_KEY = $env['SUPABASE_SERVICE_KEY'] ?? $env['supabase_service_key'] ?? null;
+
 // Validation
 if (!$SUPABASE_URL || !$SUPABASE_KEY) {
     header('Content-Type: application/json');
@@ -32,29 +35,19 @@ if (!$SUPABASE_URL || !$SUPABASE_KEY) {
 }
 
 function supabase_query($endpoint, $method = 'GET', $data = null) {
-    // Bring all connection sets into scope
-    global $SUPABASE_URL, $SUPABASE_KEY, $SUPABASE_USER_URL, $SUPABASE_USER_KEY;
+    // Always use the primary SUPABASE_URL and SUPABASE_KEY
+    global $SUPABASE_URL, $SUPABASE_KEY;
 
-    // Define all target endpoints/tables belonging to your dbUser database
-    // Note: `activity_logs` should remain on the main DB after merge, so exclude it here
-    $userDbTables = ['paw_users', 'admin_codes', 'student_profiles', 'faculty_profiles', 'favorites'];
-    
-    // Determine which database credentials to apply
-    $useUserDb = false;
-    foreach ($userDbTables as $table) {
-        if (strpos($endpoint, $table) === 0) {
-            $useUserDb = true;
-            break;
-        }
-    }
+    // Assign base URL from the main Supabase credentials
+    $baseUrl = rtrim($SUPABASE_URL, '/');
 
-    // Assign URLs dynamically
-    if ($useUserDb) {
-        $baseUrl = rtrim($SUPABASE_USER_URL, '/');
-        $apiKey = $SUPABASE_USER_KEY;
-    } else {
-        $baseUrl = rtrim($SUPABASE_URL, '/');
+    // Use the anonymous/publishable key for reads; prefer a Service Role key for mutations if provided
+    global $SUPABASE_SERVICE_KEY;
+    if ($method === 'GET') {
         $apiKey = $SUPABASE_KEY;
+    } else {
+        // For POST/PATCH/DELETE, prefer service key to bypass RLS for trusted server operations
+        $apiKey = $SUPABASE_SERVICE_KEY ?? $SUPABASE_KEY;
     }
 
     // Ensure URL matches PostgREST syntax rules
